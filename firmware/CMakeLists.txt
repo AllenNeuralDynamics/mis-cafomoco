@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-# initialize pico-sdk from submodule
-# note: this must happen before project()
 include(pico-sdk/pico_sdk_init.cmake)
 
 project(multicam_focus)
@@ -9,17 +7,30 @@ project(multicam_focus)
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# rest of your project
 
 add_executable(${PROJECT_NAME}
-    src/hello_world.c
+    src/hello_world.cpp
 )
 
-# Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(multicam_focus pico_stdlib)
+add_library(brushed_motor_controller
+    src/brushed_motor_controller.cpp
+)
+
+
+# Where to look for header files.
+#target_include_directories(${PROJECT_NAME} PUBLIC inc)
+
+# Where to look for header files.
+#target_include_directories(brushed_motor_controller PUBLIC inc)
+include_directories(inc)
+
+
+# Link libraries to the targets that need them.
+target_link_libraries(brushed_motor_controller pico_stdlib hardware_pwm)
+target_link_libraries(${PROJECT_NAME} pico_stdlib brushed_motor_controller)
 
 # create map/bin/hex/uf2 file in addition to ELF.
-pico_add_extra_outputs(multicam_focus)
+pico_add_extra_outputs(${PROJECT_NAME})
 
 # USB serial
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
