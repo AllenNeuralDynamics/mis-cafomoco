@@ -1,4 +1,5 @@
-# MIS Serial MultiCam Focus
+# mis-cafomoco
+## Modular Insertion System - CAmera FOcus MOtor COntroller
 
 A serial interface for focusing many cameras on the MIS rig
 
