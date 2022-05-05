@@ -9,6 +9,7 @@ BrushedMotorController::BrushedMotorController(uint8_t torque_pwm_pin, uint8_t d
     // Allocate torque_pwm_pin for pwm; allocate dir pin as output.
     gpio_set_function(torque_pwm_pin_, GPIO_FUNC_PWM);
 
+    // Initialize direction pin and default to output 0.
     gpio_init(dir_pin_);
     gpio_set_dir(dir_pin_, GPIO_OUT);
     gpio_put(dir_pin_, false);
@@ -34,7 +35,6 @@ BrushedMotorController::BrushedMotorController(uint8_t torque_pwm_pin, uint8_t d
 
 BrushedMotorController::~BrushedMotorController()
 {
-
     disable_output();
     pwm_set_enabled(slice_num_, false);
     // Set GPIOs to inputs.
@@ -42,9 +42,6 @@ BrushedMotorController::~BrushedMotorController()
 }
 
 
-/**
- * \brief set the duty cycle to a value between 0 and 100
- */
 void BrushedMotorController::set_duty_cycle(uint8_t duty_cycle_percentage)
 {
     // Clamp output.

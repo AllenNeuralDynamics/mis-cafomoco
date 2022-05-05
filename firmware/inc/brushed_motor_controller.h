@@ -8,24 +8,32 @@ class BrushedMotorController
 {
 public:
     /**
-     * \brief constructor.
+     * \brief constructor. Connect to PWM hardware, set dir_pin to logic 0;
+     *        set torque_pwm_pin to 0.
      * \param torque_pwm_pin the pwm output pin to the controller enable pin.
      * \param dir_pin the output pin to the controller dir pin.
-     * \note torque_pwm_pin and dir_pin must be different.
+     * \note torque_pwm_pin and dir_pin must be different pins.
      */
     BrushedMotorController(uint8_t torque_pwm_pin, uint8_t dir_pin);
 
-    ~BrushedMotorController();
 
     /**
-     *\brief sets the duty cycle
+     * \brief destructor. Leave the outputs off and configured as input.
+     */
+    ~BrushedMotorController();
+
+
+    /**
+     *\brief sets the duty cycle to a value between 0 (off) and 100 (fully on).
      */
     void set_duty_cycle(uint8_t duty_cycle_percentage);
 
+
     /**
-     *\brief sets the pwm frequency in Hz. Between 5[KHz] 500[KHz]
+     *\brief sets the pwm frequency in Hz. Between 5[KHz] and 500[KHz]
      */
     void set_pwm_frequency(uint32_t freq_hz);
+
 
     /**
      * \brief enable the pwm output
@@ -33,6 +41,7 @@ public:
      */
     void enable_output(void)
     {pwm_set_chan_level(slice_num_, gpio_channel_, duty_cycle_);}
+
 
     /**
      * \brief disable the pwm output
