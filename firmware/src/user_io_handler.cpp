@@ -41,33 +41,26 @@ void UserIOHandler::read_chars_nonblocking()
 
 void UserIOHandler::parse_msg()
 {
-    // March through the char array sequentially while interpretting chunks
-    // of it as a command with arguments.
+    // Tokenize the input into: [CMD] [motors] [motor values].
+    // Interpret subtokens for motors as: [motor0] [motor1] ... [motorN]
+    // and duty cycles for each motor as: [duty0] [duty1] ... [dutyN]
+    // Stuff all the relevant data into parsed_msg_.
 
     // Safety guard to avoid parsing an unfinished string.
     if (!new_msg())
         return;
 
-    // TODO: Handle multiple motor indexes that are all the same.
-    char* str_chunk;
+    char * ch_ptr;
+    int token_count;
+    char* tokens[MAX_TOKENS]; // Container to hold the start of all tokens.
 
-    uint8_t buff_index = 0;
-    char curr_char = raw_buffer_[buff_index];
-
-    // TODO? strip \n from front and back.
-
-    // Strip leading whitespace and other chars that could land in front.
-    while (curr_char == ' ' || curr_char == '\n')
-    {curr_char = raw_buffer_[++buff_index];}
-
-    // Extract command.
-    str_chunk = &raw_buffer_[buff_index];
-    while (curr_char != ' ' && curr_char != '\r' && curr_char != '\n')
-    {curr_char = raw_buffer_[++buff_index];}
-    // Null-terminate this chunk.
-    raw_buffer_[buff_index] = '\0';
-    // Save cmd.
-    parsed_msg_.cmd = cmd_str_to_cmd(str_chunk);
+    token_count = extract_tokens(raw_buffer_, " \r\n", tokens, MAX_TOKENS);
+    if (token_count < 0)
+    {
+        msg_is_malformed_ = true;
+        return;
+    }
+    parsed_msg_.cmd = cmd_str_to_cmd(tokens[0]);
 
     // CMD Checks.
     Cmd& cmd = parsed_msg_.cmd;
@@ -79,62 +72,83 @@ void UserIOHandler::parse_msg()
     // Bail-early for cmds without additional args.
     if (cmd == IS_BUSY || cmd == HOME_ALL || cmd == HOME_ALL_IN_PLACE)
         return;
-
-    // Strip whitespace between commands. (Skip added null-termination char.)
-    curr_char = raw_buffer_[++buff_index];
-    while (curr_char == ' ')
-    {curr_char = raw_buffer_[++buff_index];}
-
-    // Extract motors of interest.
-    parsed_msg_.motor_count = 0;
-    for (auto bmc_index=0; bmc_index<NUM_BMCS; ++bmc_index)
+    // Check arg count for remaining cmds with args.
+    if (cmd == HOME || cmd == HOME_IN_PLACE)
     {
-        str_chunk = &raw_buffer_[buff_index]; // next start of string chunk.
-        while (curr_char != ',' && curr_char != ' ' && curr_char != '\r' &&
-               curr_char != '\n')
-        {//printf("\'%c\' (%d)\r\n", curr_char, curr_char);
-         curr_char = raw_buffer_[++buff_index];} // read until delimiter
-        raw_buffer_[buff_index] = '\0'; // Null-terminate this chunk.
-        // Convert to int and save. Throw std::invalid_argument on failure.
-        parsed_msg_.motor_indexes[bmc_index] = std::stoi(str_chunk);
-        parsed_msg_.motor_count += 1;
-        // Check if no more motors specified. (Motors are delimited by ',')
-        curr_char = raw_buffer_[++buff_index];
-        if (curr_char == ' ' || curr_char == '\r' || curr_char == '\n' ||
-            curr_char == '\0')
-            break;
+        if (token_count != 2)
+        {
+            msg_is_malformed_ = true;
+            return;
+        }
+    }
+    else // all other cmds.
+    {
+        if (token_count != 3)
+        {
+            msg_is_malformed_ = true;
+            return;
+        }
     }
 
-    printf("Done parsing msg.\r\n");
-    return;
+    // Extract Motor Args.
+    int motor_count;
+    char* motor_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+    motor_count = extract_tokens(tokens[1], ",", motor_strs, NUM_BMCS);
+    if (motor_count < 0)
+    {
+        msg_is_malformed_ = true;
+        return;
+    }
+    parsed_msg_.motor_count = motor_count;
+    for (uint8_t bmc_index = 0; bmc_index < motor_count; ++bmc_index)
+    {
+        parsed_msg_.motor_indexes[bmc_index] = std::stoi(motor_strs[bmc_index]);
+    }
 
     // Bail-early for cmds without additional args.
-    if (cmd == HOME)
-        return;
-
-    // Strip whitespace between args.
-    curr_char = raw_buffer_[++buff_index];
-    while (curr_char != ' ');
-    {curr_char = raw_buffer_[++buff_index];}
-
-    // extract duty cycles for motors.
-    str_chunk = &raw_buffer_[buff_index]; // next start of string chunk.
-    for (auto bmc_index=0; bmc_index<NUM_BMCS; ++bmc_index)
+    if (cmd == HOME || cmd == HOME_IN_PLACE)
     {
-        while (curr_char != ',' && curr_char != ' ' && curr_char != '\r' &&
-               curr_char != '\n')
-        {curr_char = raw_buffer_[++buff_index];} // read until delimiter
-        raw_buffer_[buff_index] = '\0'; // Null-terminate this string.
-        // Convert to int and save. Throw std::invalid_argument on failure.
-        parsed_msg_.duty_cycles[bmc_index] = std::stoi(str_chunk);
-        curr_char = raw_buffer_[++buff_index];
-        // Check if no more args specified. (Motors args are delimited by ',')
-        if (curr_char == ' ' || curr_char == '\r' || curr_char == '\n')
-            break;
+        return;
     }
 
-    // parsed_msg_ is now fully populated at this point.
-    msg_is_malformed_ = false;
+    // Extract Motor Duty Cycles.
+    int motor_arg_count;
+    char* duty_cycle_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+    motor_arg_count = extract_tokens(tokens[2], ",", duty_cycle_strs, NUM_BMCS);
+    if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
+    {
+        msg_is_malformed_ = true;
+        return;
+    }
+    for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
+    {
+        parsed_msg_.duty_cycles[bmc_index] =
+            std::stoi(duty_cycle_strs[bmc_index]);
+    }
+}
+
+
+int UserIOHandler::extract_tokens(char input[], const char delimiters[],
+                                   char* tokens[], size_t max_tokens)
+{
+    char* ch_ptr;
+    int token_count = 0;
+    // First strtok call takes the pointer to the start of the string.
+    // Subsequent calls take NULL as input to keep tokenizing the same string.
+    // Note: strtok destructively modifies the string!
+    ch_ptr = strtok(input, delimiters);
+    while (ch_ptr != NULL)
+    {
+        tokens[token_count] = ch_ptr;
+        ++token_count;
+        ch_ptr = strtok(NULL, delimiters);
+        // Check if the user input too many tokens.
+        if (token_count > max_tokens)
+        {
+            return -1;
+        }
+    }
+    return token_count;
 }
 
 
@@ -151,6 +165,8 @@ Cmd UserIOHandler::cmd_str_to_cmd(char* cmd_str)
             return HOME;
         if (std::strcmp(cmd_str, "HOME_IN_PLACE") == 0)
             return HOME_IN_PLACE;
+        if (std::strcmp(cmd_str, "HOME_ALL") == 0)
+            return HOME_ALL;
         if (std::strcmp(cmd_str, "HOME_ALL_IN_PLACE") == 0)
             return HOME_ALL_IN_PLACE;
         return ERROR;

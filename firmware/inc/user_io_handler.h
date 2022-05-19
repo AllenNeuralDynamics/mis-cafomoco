@@ -28,8 +28,8 @@ struct ParsedUserMsg
 {
     Cmd cmd;
     // args
-    int8_t motor_indexes[NUM_BMCS] {-1, -1, -2, -3}; // -1 for invalid input.
-    int8_t duty_cycles[NUM_BMCS] {-1, -1, -1, -1}; // -1 for invalid input.
+    uint8_t motor_indexes[NUM_BMCS];
+    uint8_t duty_cycles[NUM_BMCS];
     // Other useful stuff about the message.
     uint8_t motor_count{0};
 };
@@ -115,10 +115,21 @@ private:
      */
     Cmd cmd_str_to_cmd(char* cmd_str);
 
+    /**
+     * \brief tokenizes string input and puts token ptrs in token_array.
+     *        Returns the number of tokens extracted or -1 if too many tokens.
+     * \param tokens array of pointers to the start of all tokens.
+     * \note will not write more than max_tokens into tokens[].
+     */
+    int extract_tokens(char input[], const char delimiters[], char* tokens[],
+                        size_t max_tokens);
 
+
+    static const uint MAX_TOKENS = 3;
     bool msg_is_malformed_;
     bool new_msg_;
     ParsedUserMsg parsed_msg_;
+
 
 };
 #endif // USER_IO_HANDLER_H
