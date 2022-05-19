@@ -4,9 +4,20 @@
 #include <pico/stdlib.h>
 #include <hardware/pwm.h>
 
+// All BMC States that do not return immediately.
+
+
 class BrushedMotorController
 {
 public:
+    enum BMCState
+    {
+        IDLE,
+        TIME_MOVE,
+        DIST_MOVE,
+        HOMING
+    };
+
     /**
      * \brief constructor. Connect to PWM hardware, set dir_pin to logic 0;
      *        set torque_pwm_pin to 0.
@@ -52,12 +63,38 @@ public:
 
 //    void set_dir(dir_t direction);
 
+    /**
+     * \brief move for a set number of milliseconds
+     */
+    void move_ms(uint32_t milliseconds);
+
+    /**
+     * \brief
+     */
+    void move_relative(float angle);
+
+    /**
+     * \brief called as quickly as possible to address pending tasks.
+     */
+    void update(void);
+
+
+    BMCState state_;
+
 private:
     uint torque_pwm_pin_;
     uint slice_num_;
     uint gpio_channel_;
     uint dir_pin_;
     uint duty_cycle_; /// The current duty cycle setting.
+
+    // internal variables for handling time move commands.
+    uint32_t set_move_time_ms_;
+    uint32_t start_move_time_ms_;
+
+    // internal variables for handling distance move commands.
+    int32_t set_move_angle_ticks_; // desired relative angle in encoder ticks.
+    int32_t start_angle_ticks_;
 
     static const uint SYSTEM_CLOCK = 125000000;
 

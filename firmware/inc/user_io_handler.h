@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <pico/stdlib.h>
 #include <stdexcept>
+#include <cstring>
 
 #define NUM_BMCS (4)
 
@@ -27,10 +28,10 @@ struct ParsedUserMsg
 {
     Cmd cmd;
     // args
-    int8_t motor_indexes[NUM_BMCS] {0, 1, 2, 3}; // -1 for invalid input.
-    int8_t duty_cycles[NUM_BMCS] {0, 0, 0, 0}; // -1 for invalid input.
+    int8_t motor_indexes[NUM_BMCS] {-1, -1, -2, -3}; // -1 for invalid input.
+    int8_t duty_cycles[NUM_BMCS] {-1, -1, -1, -1}; // -1 for invalid input.
     // Other useful stuff about the message.
-    uint8_t motor_count{4};
+    uint8_t motor_count{0};
 };
 
 
@@ -64,22 +65,24 @@ public:
 
 
     /**
-     * \brief handle user input and dispatch it.
-     * \param input_str string contents terminated with "\r\n"
+     * \brief convert \n-terminated string in raw_buffer_ to ParsedUserMsg.
+     *        Flag msg_is_malformed_ if there is an issue with the string.
      */
-    void handle_user_input();
+    void parse_msg();
 
 
     /**
      * \brief inline. retrieve the new message
      */
-    ParsedUserMsg get_msg(){return parsed_msg_;}
+    // TODO: does this actually return a reference?
+    ParsedUserMsg& get_msg(){return parsed_msg_;}
 
 
     /**
      * \brief inline. clear the parsed message
      */
-    void clear_msg(){new_msg_ = false; buff_index_ = 0;}
+    void clear_msg()
+    {new_msg_ = false; buff_index_ = 0; msg_is_malformed_ = false;}
 
 
     /**
@@ -96,16 +99,23 @@ public:
     bool msg_is_malformed(){return msg_is_malformed_;}
 
 
+    /**
+     * \brief run state machine based on provided input.
+     */
+    void update(void);
+
+    // FIXME: make this private.
+    static const uint INPUT_BUF_SIZE = 128;
+    char raw_buffer_[INPUT_BUF_SIZE];
+    uint buff_index_;
+
 private:
     /**
      * \brief convert input string to cmd.
      */
     Cmd cmd_str_to_cmd(char* cmd_str);
 
-    static const uint INPUT_BUF_SIZE = 128;
 
-    char raw_buffer_[INPUT_BUF_SIZE];
-    uint buff_index_;
     bool msg_is_malformed_;
     bool new_msg_;
     ParsedUserMsg parsed_msg_;

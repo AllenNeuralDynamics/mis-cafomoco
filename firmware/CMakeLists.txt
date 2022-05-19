@@ -4,7 +4,7 @@ include(pico-sdk/pico_sdk_init.cmake)
 
 project(multicam_focus)
 
-# Enable exceptions so we can handle malformed user input.
+# Enable try/catch exceptions. (Required for string parsing implementation.)
 set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 
 # initialize the Raspberry Pi Pico SDK

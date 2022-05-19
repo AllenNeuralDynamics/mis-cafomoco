@@ -71,3 +71,63 @@ void BrushedMotorController::set_pwm_frequency(uint32_t freq_hz)
     }
     pwm_set_clkdiv(slice_num_, new_freq_div);
 }
+
+
+void move_ms(uint32_t milliseconds)
+{
+    // increase the movement time.
+}
+
+
+void move_relative_angle(float angle)
+{
+    // increase the movement angle.
+}
+
+
+void BrushedMotorController::update(void)
+{
+    // Cleanup inputs:
+    // Nothing to do!
+
+//    // Handle state transition logic.
+//    BMCState next_state{state_};
+//    if (state_ != IDLE) // any state where we're moving.
+//    {
+//        // check if we're stuck moving.
+//    }
+//    switch (state_)
+//    {
+//        case IDLE:
+//            // Check inputs.
+//            if (set_move_time_ms_ > 0)
+//                next_state = TIME_MOVE;
+//            else if (set_move_angle_ticks_ != 0)
+//                next_state = DIST_MOVE;
+//            else {}
+//            break;
+//        case TIME_MOVE:
+//            // Check elapsed time.
+//            if (curr_time_ms > (start_move_time_ms_ + set_move_time_ms_))
+//                next_state = IDLE;
+//            break;
+//        case DIST_MOVE:
+//            // Check elapsed distance within error bars.
+//            break;
+//        case HOMING:
+//            // Check the state of the GPIOs. Halt motor if triggered.
+//            break;
+//        default:
+//            break;
+//    }
+//
+//    // Handle Ouputs on State Transition
+//    if (state_ == TIME_MOVE && next_state == IDLE)
+//        set_move_time_ms_ = 0;
+//    else if (state_ == DIST_MOVE && next_state == IDLE)
+//        set_move_angle_ticks_ = 0;
+//    else {}
+//
+//    // Change states.
+//    state_ = next_state;
+}
