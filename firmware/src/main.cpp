@@ -132,6 +132,7 @@ int main()
 
     while(true)
     {
+        // Pull chars out of the USB buffer.
         user_handler.read_chars_nonblocking();
         // Check if fully-formed user input has arrived.
         // Update state of all BMCs accordingly.

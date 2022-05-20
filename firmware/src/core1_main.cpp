@@ -9,10 +9,18 @@ uint32_t* read_buffer_ptr = encoder_buffers[1];
 uint32_t prev_state;
 uint32_t curr_state;
 
+
 void init_encoder_pins()
 {
-    return;
+    // Encoder GPIOs are contiguous starting from ENCODER_BASE_OFFSET
+    for (auto i=0; i<NUM_BMCS; ++i)
+    {
+        // Setup GPIOs as inputs. (No pullups required.)
+        gpio_init(ENCODER_BASE_OFFSET + 2*i);
+        gpio_init(ENCODER_BASE_OFFSET + 2*i + 1);
+    }
 }
+
 
 int32_t get_encoder_increment(uint8_t prev_state, uint8_t curr_state)
 {
@@ -43,13 +51,14 @@ int32_t get_encoder_increment(uint8_t prev_state, uint8_t curr_state)
     }
 }
 
+// Update each encoder value based on new inputs and store in the write buffer.
 void update_encoders()
 {
     int32_t increment;
     // read the GPIO port.
     // Encoder pins are contiguous along the GPIO port.
     // i.e: Enc0A, Enc0B, Enc1A, Enc1B, ....
-    curr_state = gpio_get_all() >> ENCODER_PORT_OFFSET;
+    curr_state = gpio_get_all() >> ENCODER_BASE_OFFSET;
     for (auto i=0;i<NUM_BMCS;++i)
     {
         // State machine logic.
@@ -73,9 +82,9 @@ void core1_main()
     }
 
     // Create starting state for encoders.
-    prev_state = gpio_get_all() >> ENCODER_PORT_OFFSET;
+    prev_state = gpio_get_all() >> ENCODER_BASE_OFFSET;
 
-    // Loop forever. Read Encoders. Memcopy into write buffer. Switch buffers.
+    // Loop forever. Read Encoders and write new positions. Switch buffers.
     uint32_t* tmp;
     while(true)
     {
