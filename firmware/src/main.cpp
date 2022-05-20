@@ -1,7 +1,9 @@
 #include <config.h>
 #include <pico/stdlib.h>
+#include <pico/multicore.h>
 #include <brushed_motor_controller.h>
 #include <user_io_handler.h>
+#include <core1_main.h>
 
 
 // Motor Controller Objects need to be on their own slices.
@@ -12,6 +14,7 @@ BrushedMotorController bmcs[NUM_BMCS]
      BrushedMotorController(2, 3), // Slice 1
      BrushedMotorController(4, 5), // Slice 2
      BrushedMotorController(6, 7)};// Slice 3
+
 
 
 /**
@@ -103,10 +106,29 @@ void handle_user_msg(ParsedUserMsg& user_msg)
 }
 
 
+// Core0 main.
 int main()
 {
     // init usb serial connection. Blocks until connected.
     user_handler.init();
+    init_encoder_pins();
+
+    // launch the encoder reading/updating process on Core1.
+    multicore_launch_core1(core1_main);
+
+
+    uint32_t* read_buffer_ptr_cpy;
+    while(true)
+    {
+        sleep_ms(500);
+        // Note: copy the read ptr so we can finish reading it out.
+        read_buffer_ptr_cpy = read_buffer_ptr;
+        printf("Encoder data: %d | %d | %d | %d\r\n", read_buffer_ptr_cpy[0],
+                                                      read_buffer_ptr_cpy[1],
+                                                      read_buffer_ptr_cpy[2],
+                                                      read_buffer_ptr_cpy[3]);
+    }
+    // rest is unreachable for now.
 
     while(true)
     {
@@ -124,14 +146,12 @@ int main()
                 continue;
             }
             ParsedUserMsg user_msg = user_handler.get_msg();
-/*
-            printf("CMD: %d\r\n", user_msg.cmd);
-            printf("Motor count: %d\r\n", user_msg.motor_count);
-            printf("Motors: ");
-            for (auto i=0;i<user_msg.motor_count;++i)
-                printf("%d, ",user_msg.motor_indexes[i]);
-            printf("\r\n");
-*/
+//            printf("CMD: %d\r\n", user_msg.cmd);
+//            printf("Motor count: %d\r\n", user_msg.motor_count);
+//            printf("Motors: ");
+//            for (auto i=0;i<user_msg.motor_count;++i)
+//                printf("%d, ",user_msg.motor_indexes[i]);
+//            printf("\r\n");
             handle_user_msg(user_msg);
             user_handler.clear_msg();
         }

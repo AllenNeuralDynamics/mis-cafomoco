@@ -23,6 +23,10 @@ add_library(user_io_handler
     src/user_io_handler.cpp
 )
 
+add_library(core1_main
+    src/core1_main.cpp
+)
+
 
 # Where to look for header files.
 #target_include_directories(${PROJECT_NAME} PUBLIC inc)
@@ -35,8 +39,9 @@ include_directories(inc)
 # Link libraries to the targets that need them.
 target_link_libraries(brushed_motor_controller pico_stdlib hardware_pwm)
 target_link_libraries(user_io_handler pico_stdlib)
+target_link_libraries(core1_main pico_stdlib)
 target_link_libraries(${PROJECT_NAME}
-                      pico_stdlib brushed_motor_controller user_io_handler)
+                      pico_stdlib brushed_motor_controller user_io_handler pico_multicore core1_main)
 
 # create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(${PROJECT_NAME})
