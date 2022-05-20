@@ -32,14 +32,12 @@ bool system_is_busy(void)
 }
 
 
-void handle_motor_states(void)
+void update_motor_states(void)
 {
     // Update the state of all motor controllers.
-    for (auto const& bmc : bmcs)
+    for (auto & bmc : bmcs)
     {
-        //if bmc_states[i].
-        // what is the bmc doing?
-        // how long / far?
+        bmc.update();
     }
 }
 
@@ -157,7 +155,7 @@ int main()
             user_handler.clear_msg();
         }
 
-        //handle_motor_states();
+        update_motor_states();
     }
 
     return 0;

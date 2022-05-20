@@ -1,8 +1,10 @@
 #include <brushed_motor_controller.h>
 // Assumes a 125MHz system clock.
 
-BrushedMotorController::BrushedMotorController(uint8_t torque_pwm_pin, uint8_t dir_pin)
-    :torque_pwm_pin_{torque_pwm_pin}, dir_pin_{dir_pin}
+BrushedMotorController::BrushedMotorController(uint8_t torque_pwm_pin,
+                                               uint8_t dir_pin)
+    :torque_pwm_pin_{torque_pwm_pin}, dir_pin_{dir_pin}, stuck_moving_{false},
+     state_{BrushedMotorController::BMCState::IDLE}
 {
 // inpired by:
 // https://github.com/raspberrypi/pico-examples/blob/master/pwm/hello_pwm/hello_pwm.c#L14-L29
@@ -14,7 +16,8 @@ BrushedMotorController::BrushedMotorController(uint8_t torque_pwm_pin, uint8_t d
     gpio_set_dir(dir_pin_, GPIO_OUT);
     gpio_put(dir_pin_, false);
 
-    // Find out (and save) which hardware (PWM slice & channel) are connected to this GPIO.
+    // Find out (and save) which hardware (PWM slice & channel) are connected
+    // to this GPIO.
     slice_num_ = pwm_gpio_to_slice_num(torque_pwm_pin_);
     gpio_channel_ = pwm_gpio_to_channel(torque_pwm_pin_);
 
@@ -76,6 +79,7 @@ void BrushedMotorController::set_pwm_frequency(uint32_t freq_hz)
 void BrushedMotorController::move_ms(uint32_t milliseconds)
 {
     // increase the movement time.
+    set_move_time_ms_ = milliseconds;
 }
 
 
@@ -85,49 +89,71 @@ void BrushedMotorController::move_relative_angle(float angle)
 }
 
 
-void BrushedMotorController::update(void)
+void BrushedMotorController::update()
 {
     // Cleanup inputs:
     // Nothing to do!
 
-//    // Handle state transition logic.
-//    BMCState next_state{state_};
-//    if (state_ != IDLE) // any state where we're moving.
-//    {
-//        // check if we're stuck moving.
-//    }
-//    switch (state_)
-//    {
-//        case IDLE:
-//            // Check inputs.
-//            if (set_move_time_ms_ > 0)
-//                next_state = TIME_MOVE;
-//            else if (set_move_angle_ticks_ != 0)
-//                next_state = DIST_MOVE;
-//            else {}
-//            break;
-//        case TIME_MOVE:
-//            // Check elapsed time.
-//            if (curr_time_ms > (start_move_time_ms_ + set_move_time_ms_))
-//                next_state = IDLE;
-//            break;
-//        case DIST_MOVE:
-//            // Check elapsed distance within error bars.
-//            break;
-//        case HOMING:
-//            // Check the state of the GPIOs. Halt motor if triggered.
-//            break;
-//        default:
-//            break;
-//    }
-//
-//    // Handle Ouputs on State Transition
-//    if (state_ == TIME_MOVE && next_state == IDLE)
-//        set_move_time_ms_ = 0;
-//    else if (state_ == DIST_MOVE && next_state == IDLE)
-//        set_move_angle_ticks_ = 0;
-//    else {}
-//
-//    // Change states.
-//    state_ = next_state;
+    // Handle state transition logic (state + inputs that cause a state change).
+    // (Mealy-style State machine.)
+    BMCState next_state{state_};
+    switch (state_)
+    {
+        case IDLE:
+        {
+            // Check inputs.
+            if (set_move_time_ms_ > 0 &&
+                duty_cycle_ > 0) // Only move if a speed was set.
+            {
+                next_state = TIME_MOVE;
+            }
+            else if (set_move_angle_ticks_ != 0 &&
+                     duty_cycle_ > 0) // Only move if a speed was set.
+            {
+                next_state = DIST_MOVE;
+            }
+            else {}
+            break;
+        }
+        case TIME_MOVE:
+        {
+            uint32_t curr_time_ms = to_ms_since_boot(get_absolute_time());
+            uint32_t end_time_ms = move_start_time_ms_ + set_move_time_ms_;
+            // Check if we're stuck moving.
+            if (curr_time_ms < end_time_ms && stuck_moving_)
+                next_state = ERROR;
+            // Check if we're done moving.
+            else if (curr_time_ms >= end_time_ms)
+                next_state = IDLE;
+            break;
+        }
+        case DIST_MOVE:
+        {
+            // Check elapsed distance within error bars.
+            break;
+        }
+        case HOMING:
+        {
+            // Check the state of the GPIOs. Halt motor if triggered.
+            break;
+        }
+        default:
+            break;
+    }
+
+    // Handle Ouputs on State Transition
+    if (state_ == IDLE && next_state == TIME_MOVE)
+    {
+        move_start_time_ms_ = to_ms_since_boot(get_absolute_time());
+        enable_output();
+    }
+    else if (state_ == TIME_MOVE && next_state == IDLE)
+    {
+        move_start_time_ms_ = 0;
+        disable_output();
+    }
+    else {}
+
+    // Change states.
+    state_ = next_state;
 }

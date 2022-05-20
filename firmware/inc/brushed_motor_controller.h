@@ -15,7 +15,8 @@ public:
         IDLE,
         TIME_MOVE,
         DIST_MOVE,
-        HOMING
+        HOMING,
+        ERROR // if we're stuck moving.
     };
 
     /**
@@ -76,7 +77,7 @@ public:
     /**
      * \brief called as quickly as possible to address pending tasks.
      */
-    void update(void);
+    void update();
 
 
     BMCState state_;
@@ -90,16 +91,19 @@ private:
 
     // internal variables for handling time move commands.
     uint32_t set_move_time_ms_;
-    uint32_t start_move_time_ms_;
+    uint32_t move_start_time_ms_;
 
     // internal variables for handling distance move commands.
     int32_t set_move_angle_ticks_; // desired relative angle in encoder ticks.
     int32_t start_angle_ticks_;
 
+    // These are modified within an interrupt.
+    volatile bool stuck_moving_ = false;
+
     static const uint SYSTEM_CLOCK = 125000000;
 
     static const uint PWM_STEP_INCREMENTS = 100;
-    static const uint DEFAULT_PWM_FREQ_HZ = 20000;
+    static const uint DEFAULT_PWM_FREQ_HZ = 20000; // Just beyond human hearing.
 
     // PWM Frequency range bounds.
     static const uint DIVIDER_MIN_FREQ_HZ = 5000;
