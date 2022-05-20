@@ -73,13 +73,13 @@ void BrushedMotorController::set_pwm_frequency(uint32_t freq_hz)
 }
 
 
-void move_ms(uint32_t milliseconds)
+void BrushedMotorController::move_ms(uint32_t milliseconds)
 {
     // increase the movement time.
 }
 
 
-void move_relative_angle(float angle)
+void BrushedMotorController::move_relative_angle(float angle)
 {
     // increase the movement angle.
 }

@@ -1,12 +1,12 @@
 #ifndef USER_IO_HANDLER_H
 #define USER_IO_HANDLER_H
+#include <config.h>
+#include <pico/stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <pico/stdlib.h>
 #include <stdexcept>
 #include <cstring>
 
-#define NUM_BMCS (4)
 
 enum Cmd
 {
@@ -17,6 +17,7 @@ enum Cmd
     HOME_IN_PLACE = 4,
     HOME_ALL = 5,
     HOME_ALL_IN_PLACE = 6,
+    SET_SPEED = 7,
     ERROR
 };
 
@@ -29,7 +30,7 @@ struct ParsedUserMsg
     Cmd cmd;
     // args
     uint8_t motor_indexes[NUM_BMCS];
-    uint8_t duty_cycles[NUM_BMCS];
+    uint8_t motor_values[NUM_BMCS];
     // Other useful stuff about the message.
     uint8_t motor_count{0};
 };
@@ -104,10 +105,12 @@ public:
      */
     void update(void);
 
-    // FIXME: make this private.
+    // FIXME: make private later.
     static const uint INPUT_BUF_SIZE = 128;
+    // Buffer to store the incoming serial port chars.
     char raw_buffer_[INPUT_BUF_SIZE];
     uint buff_index_;
+
 
 private:
     /**

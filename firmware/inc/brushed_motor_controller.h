@@ -71,7 +71,7 @@ public:
     /**
      * \brief
      */
-    void move_relative(float angle);
+    void move_relative_angle(float angle);
 
     /**
      * \brief called as quickly as possible to address pending tasks.

@@ -1,10 +1,7 @@
-//#include <stdio.h>
+#include <config.h>
 #include <pico/stdlib.h>
 #include <brushed_motor_controller.h>
 #include <user_io_handler.h>
-
-// Constants
-#define NUM_BMCS (4)
 
 
 // Motor Controller Objects need to be on their own slices.
@@ -54,33 +51,53 @@ void handle_user_msg(ParsedUserMsg& user_msg)
         case IS_BUSY:
             // Tell the user if any BMC is moving.
             if (system_is_busy())
-                printf("True");
+                printf("True\r\n");
             else
-                printf("False");
+                printf("False\r\n");
+            break;
+        case SET_SPEED:
+            for (auto i = 0; i < user_msg.motor_count;++i)
+            {
+                uint8_t& motor_index = user_msg.motor_indexes[i];
+                uint8_t& duty_cycle_percent = user_msg.motor_values[i];
+                bmcs[motor_index].set_duty_cycle(duty_cycle_percent);
+            }
             break;
         case TIME_MOVE:
             // move specified motors for specified amount of time.
             // issue_time_move(user_msg);
+            for (auto i = 0; i < user_msg.motor_count;++i)
+            {
+                uint8_t& motor_index = user_msg.motor_indexes[i];
+                uint8_t& move_time_ms = user_msg.motor_values[i];
+                bmcs[motor_index].move_ms(move_time_ms);
+            }
             break;
         case DIST_MOVE:
             // handle the motors being issued dist move commands.
             // issue_dist_move(user_msg);
+            printf("Not implemented.\r\n");
             break;
         case HOME:
             // handle the motors being issued a home command.
             // issue_home_cmd(user_msg)
+            printf("Not implemented.\r\n");
             break;
         case HOME_IN_PLACE:
             // handle the motors being issued a home in place command.
+            printf("Not implemented.\r\n");
             break;
         case HOME_ALL:
             // home all motors.
+            printf("Not implemented.\r\n");
             break;
         case HOME_ALL_IN_PLACE:
             // zero out the location of all motors.
+            printf("Not implemented.\r\n");
             break;
         default:
             // shouldn't happen bc enum and message checking.
+            printf("Not a valid command.\r\n");
             break;
     }
 }
@@ -98,7 +115,7 @@ int main()
         // Update state of all BMCs accordingly.
         if (user_handler.new_msg())
         {
-            printf("Received: %s\r\n", user_handler.raw_buffer_);
+            printf("Received: %s\r\n", user_handler.raw_buffer_); // make private.
             user_handler.parse_msg();
             if (user_handler.msg_is_malformed())
             {
@@ -107,12 +124,15 @@ int main()
                 continue;
             }
             ParsedUserMsg user_msg = user_handler.get_msg();
+/*
             printf("CMD: %d\r\n", user_msg.cmd);
             printf("Motor count: %d\r\n", user_msg.motor_count);
+            printf("Motors: ");
             for (auto i=0;i<user_msg.motor_count;++i)
                 printf("%d, ",user_msg.motor_indexes[i]);
             printf("\r\n");
-            //handle_user_msg(user_msg);
+*/
+            handle_user_msg(user_msg);
             user_handler.clear_msg();
         }
 

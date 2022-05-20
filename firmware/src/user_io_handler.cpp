@@ -113,8 +113,8 @@ void UserIOHandler::parse_msg()
 
     // Extract Motor Duty Cycles.
     int motor_arg_count;
-    char* duty_cycle_strs[NUM_BMCS]; // Container for ptrs to motor strings.
-    motor_arg_count = extract_tokens(tokens[2], ",", duty_cycle_strs, NUM_BMCS);
+    char* motor_vals_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+    motor_arg_count = extract_tokens(tokens[2], ",", motor_vals_strs, NUM_BMCS);
     if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
     {
         msg_is_malformed_ = true;
@@ -122,8 +122,8 @@ void UserIOHandler::parse_msg()
     }
     for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
     {
-        parsed_msg_.duty_cycles[bmc_index] =
-            std::stoi(duty_cycle_strs[bmc_index]);
+        parsed_msg_.motor_values[bmc_index] =
+            std::stoi(motor_vals_strs[bmc_index]);
     }
 }
 
