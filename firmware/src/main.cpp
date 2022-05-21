@@ -1,20 +1,34 @@
 #include <config.h>
 #include <pico/stdlib.h>
 #include <pico/multicore.h>
-#include <brushed_motor_controller.h>
+#include <motor_controller.h>
+#include <cpu_encoder.h>
 #include <user_io_handler.h>
 #include <core1_main.h>
 
 
-// Motor Controller Objects need to be on their own slices.
+// Create Object Instances.
 UserIOHandler user_handler;
 
-BrushedMotorController bmcs[NUM_BMCS]
-    {BrushedMotorController(0, 1), // Slice 0
-     BrushedMotorController(2, 3), // Slice 1
-     BrushedMotorController(4, 5), // Slice 2
-     BrushedMotorController(6, 7)};// Slice 3
+// Motor Controller Objects need to be on their own slices.
+EnDirMotorDriver motor_drivers[NUM_BMCS]
+    {EnDirMotorDriver(0, 1), // PWM Slice 0
+     EnDirMotorDriver(2, 3), // PWM Slice 1
+     EnDirMotorDriver(4, 5), // PWM Slice 2
+     EnDirMotorDriver(6, 7)};// PWM Slice 3
 
+// Assign encoder instances to their memory location.
+CPUEncoder encoders[NUM_BMCS]
+    {CPUEncoder(read_buffer_ptr, 0),
+     CPUEncoder(read_buffer_ptr, 1),
+     CPUEncoder(read_buffer_ptr, 2),
+     CPUEncoder(read_buffer_ptr, 3)};
+
+MotorController bmcs[NUM_BMCS]
+    {MotorController(motor_drivers[0], encoders[0]),
+     MotorController(motor_drivers[1], encoders[1]),
+     MotorController(motor_drivers[2], encoders[2]),
+     MotorController(motor_drivers[3], encoders[3])};
 
 
 /**
@@ -25,7 +39,7 @@ bool system_is_busy(void)
     // This could be sped up with bitfields.
     for (auto const& bmc : bmcs)
     {
-        if (bmc.state_ != BrushedMotorController::IDLE)
+        if (bmc.state_ != MotorController::IDLE)
             return true;
     }
     return false;
@@ -60,8 +74,8 @@ void handle_user_msg(ParsedUserMsg& user_msg)
             for (auto i = 0; i < user_msg.motor_count;++i)
             {
                 uint8_t& motor_index = user_msg.motor_indexes[i];
-                uint8_t& duty_cycle_percent = user_msg.motor_values[i];
-                bmcs[motor_index].set_duty_cycle(duty_cycle_percent);
+                uint8_t& speed_in_percent = user_msg.motor_values[i];
+                bmcs[motor_index].set_speed_percentage(speed_in_percent);
             }
             break;
         case TIME_MOVE:

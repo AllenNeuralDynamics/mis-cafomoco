@@ -15,8 +15,16 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
 )
 
-add_library(brushed_motor_controller
-    src/brushed_motor_controller.cpp
+add_library(motor_controller
+    src/motor_controller.cpp
+)
+
+add_library(en_dir_motor_driver
+    src/en_dir_motor_driver.cpp
+)
+
+add_library(encoder
+    src/cpu_encoder.cpp
 )
 
 add_library(user_io_handler
@@ -37,11 +45,13 @@ include_directories(inc)
 
 
 # Link libraries to the targets that need them.
-target_link_libraries(brushed_motor_controller pico_stdlib hardware_pwm)
+target_link_libraries(motor_controller en_dir_motor_driver encoder)
+target_link_libraries(en_dir_motor_driver pico_stdlib hardware_pwm)
 target_link_libraries(user_io_handler pico_stdlib)
 target_link_libraries(core1_main pico_stdlib)
 target_link_libraries(${PROJECT_NAME}
-                      pico_stdlib brushed_motor_controller user_io_handler pico_multicore core1_main)
+                      pico_stdlib motor_controller user_io_handler
+                      pico_multicore core1_main)
 
 # create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(${PROJECT_NAME})
