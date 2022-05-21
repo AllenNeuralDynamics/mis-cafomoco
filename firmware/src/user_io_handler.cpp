@@ -54,76 +54,69 @@ void UserIOHandler::parse_msg()
     int token_count;
     char* tokens[MAX_TOKENS]; // Container to hold the start of all tokens.
 
-    token_count = extract_tokens(raw_buffer_, " \r\n", tokens, MAX_TOKENS);
-    if (token_count < 0)
+    // Try-Catch everythign so we can flag an error before exiting.
+    try
     {
-        msg_is_malformed_ = true;
-        return;
-    }
-    parsed_msg_.cmd = cmd_str_to_cmd(tokens[0]);
+        token_count = extract_tokens(raw_buffer_, " \r\n", tokens, MAX_TOKENS);
+        if (token_count < 0)
+            throw std::invalid_argument("");
+        parsed_msg_.cmd = cmd_str_to_cmd(tokens[0]);
 
-    // CMD Checks.
-    Cmd& cmd = parsed_msg_.cmd;
-    if (cmd == ERROR)
-    {
-        msg_is_malformed_ = true;
-        return;
-    }
-    // Bail-early for cmds without additional args.
-    if (cmd == IS_BUSY || cmd == HOME_ALL || cmd == HOME_ALL_IN_PLACE)
-        return;
-    // Check arg count for remaining cmds with args.
-    if (cmd == HOME || cmd == HOME_IN_PLACE)
-    {
-        if (token_count != 2)
+        // CMD Checks.
+        Cmd& cmd = parsed_msg_.cmd;
+        if (cmd == ERROR)
+            throw std::invalid_argument("");
+        // Bail-early for cmds without additional args.
+        if (cmd == IS_BUSY || cmd == HOME_ALL || cmd == HOME_ALL_IN_PLACE)
+            return;
+        // Check arg count for remaining cmds with args.
+        if (cmd == HOME || cmd == HOME_IN_PLACE)
         {
-            msg_is_malformed_ = true;
+            if (token_count != 2)
+                throw std::invalid_argument("");
+        }
+        else // all other cmds.
+        {
+            if (token_count != 3)
+                throw std::invalid_argument("");
+        }
+
+        // Extract Motor Args.
+        int motor_count;
+        char* motor_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+        motor_count = extract_tokens(tokens[1], ",", motor_strs, NUM_BMCS);
+        if (motor_count < 0)
+            throw std::invalid_argument("");
+        parsed_msg_.motor_count = motor_count;
+        for (uint8_t bmc_index = 0; bmc_index < motor_count; ++bmc_index)
+        {
+            parsed_msg_.motor_indexes[bmc_index] =
+                std::stoi(motor_strs[bmc_index]);
+        }
+
+        // Bail-early for cmds without additional args.
+        if (cmd == HOME || cmd == HOME_IN_PLACE)
+        {
             return;
         }
-    }
-    else // all other cmds.
-    {
-        if (token_count != 3)
+
+        // Extract Motor Duty Cycles.
+        int motor_arg_count;
+        char* motor_vals_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+        motor_arg_count = extract_tokens(tokens[2], ",", motor_vals_strs,
+                                         NUM_BMCS);
+        if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
+            throw std::invalid_argument("");
+        for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
         {
-            msg_is_malformed_ = true;
-            return;
+            parsed_msg_.motor_values[bmc_index] =
+                std::stoi(motor_vals_strs[bmc_index]);
         }
     }
-
-    // Extract Motor Args.
-    int motor_count;
-    char* motor_strs[NUM_BMCS]; // Container for ptrs to motor strings.
-    motor_count = extract_tokens(tokens[1], ",", motor_strs, NUM_BMCS);
-    if (motor_count < 0)
+    catch (std::invalid_argument& e) // stoi throws this and so do we.
     {
         msg_is_malformed_ = true;
-        return;
-    }
-    parsed_msg_.motor_count = motor_count;
-    for (uint8_t bmc_index = 0; bmc_index < motor_count; ++bmc_index)
-    {
-        parsed_msg_.motor_indexes[bmc_index] = std::stoi(motor_strs[bmc_index]);
-    }
-
-    // Bail-early for cmds without additional args.
-    if (cmd == HOME || cmd == HOME_IN_PLACE)
-    {
-        return;
-    }
-
-    // Extract Motor Duty Cycles.
-    int motor_arg_count;
-    char* motor_vals_strs[NUM_BMCS]; // Container for ptrs to motor strings.
-    motor_arg_count = extract_tokens(tokens[2], ",", motor_vals_strs, NUM_BMCS);
-    if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
-    {
-        msg_is_malformed_ = true;
-        return;
-    }
-    for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
-    {
-        parsed_msg_.motor_values[bmc_index] =
-            std::stoi(motor_vals_strs[bmc_index]);
+        printf("Error User Input is invalid.");
     }
 }
 

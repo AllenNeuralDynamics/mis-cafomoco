@@ -64,7 +64,7 @@ private:
     uint duty_cycle_; /// The current duty cycle setting.
 
     // Constants
-    static const uint SYSTEM_CLOCK = 125000000;
+    static const uint SYSTEM_CLOCK = 133000000;
 
     static const uint PWM_STEP_INCREMENTS = 100;
     static const uint DEFAULT_PWM_FREQ_HZ = 20000; // Just beyond human hearing.

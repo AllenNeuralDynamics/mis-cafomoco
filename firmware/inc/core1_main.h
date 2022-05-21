@@ -4,6 +4,9 @@
 #include <config.h>
 #include <stdint.h>
 #include <pico/stdlib.h>
+#ifdef PROFILE_ENCODER_LOOP
+#include <stdio.h>
+#endif
 
 // Double buffer ptr for sharing access to the encoder data across cores.
 extern uint32_t* read_buffer_ptr;

@@ -44,6 +44,10 @@ add_library(core1_main
 include_directories(inc)
 
 
+# For Debugging. Check how many CPU cycles an encoder reading iteration takes.
+#add_definitions(-DPROFILE_ENCODER_LOOP)
+
+
 # Link libraries to the targets that need them.
 target_link_libraries(motor_controller en_dir_motor_driver encoder)
 target_link_libraries(en_dir_motor_driver pico_stdlib hardware_pwm)

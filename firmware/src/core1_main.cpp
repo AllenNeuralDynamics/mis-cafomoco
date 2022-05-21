@@ -1,5 +1,10 @@
 #include <core1_main.h>
 
+#ifdef PROFILE_ENCODER_LOOP
+#define SYST_CSR (*(volatile uint32_t*)(PPB_BASE + 0xe010))
+#define SYST_CVR (*(volatile uint32_t*)(PPB_BASE + 0xe018))
+#endif
+
 // Double buffer for writing encoder data (Core1) and reading it (Core0).
 uint32_t encoder_buffers[2][NUM_BMCS];
 uint32_t* write_buffer_ptr = encoder_buffers[0];
@@ -72,8 +77,15 @@ void update_encoders()
 
 
 // Core1 reads encoders in a loop and manages their data in a double buffer.
+// After some profiling, this code takes <100 cycles @ 133MHz, which means
+// we can poll the encoders at ~1.33MHz.
 void core1_main()
 {
+#ifdef PROFILE_ENCODER_LOOP
+    uint32_t loop_start_systicks;
+    uint32_t cpu_ticks;
+    SYST_CSR |= (1 << 2) | (1 << 0); // Systick use cpu clock (133MHz). enable.
+#endif
     // Clear encoder data.
     for (auto i=0;i<NUM_BMCS;++i)
     {
@@ -88,10 +100,17 @@ void core1_main()
     uint32_t* tmp;
     while(true)
     {
+#ifdef PROFILE_ENCODER_LOOP
+        loop_start_systicks = SYST_CVR;
+#endif
         update_encoders();
         // Switch buffers.
         tmp = write_buffer_ptr;
         write_buffer_ptr = read_buffer_ptr;
         read_buffer_ptr = tmp;
+#ifdef PROFILE_ENCODER_LOOP
+        cpu_ticks = loop_start_systicks - SYST_CVR; // CPU ticks count DOWN.
+        printf("Encoder Loop CPU ticks: %d\r\n", cpu_ticks);
+#endif
     }
 }
