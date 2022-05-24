@@ -52,7 +52,7 @@ add_definitions(-DDEBUG)
 # Link libraries to the targets that need them.
 target_link_libraries(motor_controller en_dir_motor_driver encoder)
 target_link_libraries(en_dir_motor_driver pico_stdlib hardware_pwm)
-target_link_libraries(user_io_handler pico_stdlib)
+target_link_libraries(user_io_handler pico_stdlib motor_controller)
 target_link_libraries(core1_main pico_stdlib)
 target_link_libraries(${PROJECT_NAME}
                       pico_stdlib motor_controller user_io_handler

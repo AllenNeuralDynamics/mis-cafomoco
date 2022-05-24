@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <cstring>
 
+#include <motor_controller.h> // for dir_t type.
+
 
 enum Cmd
 {
@@ -31,6 +33,7 @@ struct ParsedUserMsg
     // args
     uint8_t motor_indexes[NUM_BMCS];
     int32_t motor_values[NUM_BMCS];
+    MotorController::dir_t directions[NUM_BMCS];
     // Other useful stuff about the message.
     uint8_t motor_count{0};
 };
@@ -128,7 +131,7 @@ private:
                         size_t max_tokens);
 
 
-    static const uint MAX_TOKENS = 3;
+    static const uint MAX_TOKENS = 4;
     bool msg_is_malformed_;
     bool new_msg_;
     ParsedUserMsg parsed_msg_;

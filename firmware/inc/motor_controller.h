@@ -17,18 +17,27 @@ class MotorController
 public:
     enum dir_t
     {
-        FORWARD,
-        REVERSE
+        REVERSE = 0,
+        FORWARD = 1
     };
 
     enum BMCState
     {
-        IDLE,
+        IDLE = 0,
         TIME_MOVE,
         DIST_MOVE,
         HOMING,
         ERROR // if we're stuck moving.
     };
+
+#ifdef DEBUG // String representations for easier reading.
+static const constexpr char* const state_as_str[] =
+    {"IDLE",
+     "TIME_MOVE",
+     "DIST_MOVE",
+     "HOMING",
+     "ERROR"};
+#endif
 
     /**
      * \brief constructor. Connect to PWM hardware, set dir_pin to logic 0;
@@ -59,26 +68,45 @@ public:
     void set_pwm_frequency(uint32_t freq_hz);
 
 
-
     /**
      * \brief set the direction
      */
     void set_dir(dir_t direction);
 
-    /**
-     * \brief move for a set number of milliseconds
-     */
-    void move_ms(uint32_t milliseconds);
 
     /**
-     * \brief
+     * \brief move for a set number of milliseconds
+     * \note triggers internal state change if state is IDLE.
+     */
+    void move_ms(uint32_t milliseconds, dir_t direction);
+
+
+    /**
+     * \brief move a specified distance.
+     * \note triggers internal state change if state is IDLE.
      */
     void move_relative_angle(float angle);
+
 
     /**
      * \brief called as quickly as possible to address pending tasks.
      */
     void update();
+
+
+    /**
+     * \brief true if the controller can accept new commands. False otherwise.
+     * \note inline
+     */
+    bool is_busy() const {return state_ != IDLE;}
+
+
+    /**
+     * \brief return speed setting.
+     * \note inline
+     */
+    bool get_speed_setting() {return set_speed_;}
+
 
     /**
      * \brief called in an interrupt.
@@ -103,6 +131,9 @@ private:
 
     // internal variable for handling currently set speed.
     uint8_t set_speed_;
+
+    // internal variables for handling time move commands.
+    dir_t move_direction_;
 
     // internal variables for handling time move commands.
     uint32_t set_move_time_ms_;

@@ -55,17 +55,16 @@ void UserIOHandler::parse_msg()
     char* tokens[MAX_TOKENS]; // Container to hold the start of all tokens.
 
     // Try-Catch everythign so we can flag an error before exiting.
-    try
-    {
+     try {
         token_count = extract_tokens(raw_buffer_, " \r\n", tokens, MAX_TOKENS);
         if (token_count < 0)
-            throw std::invalid_argument("");
+            throw std::invalid_argument("Token count must be nonzero.");
         parsed_msg_.cmd = cmd_str_to_cmd(tokens[0]);
 
         // CMD Checks.
         Cmd& cmd = parsed_msg_.cmd;
         if (cmd == ERROR)
-            throw std::invalid_argument("");
+            throw std::invalid_argument("Command is not valid.");
         // Bail-early for cmds without additional args.
         if (cmd == IS_BUSY || cmd == HOME_ALL || cmd == HOME_ALL_IN_PLACE)
             return;
@@ -73,15 +72,20 @@ void UserIOHandler::parse_msg()
         if (cmd == HOME || cmd == HOME_IN_PLACE)
         {
             if (token_count != 2)
-                throw std::invalid_argument("");
+                throw std::invalid_argument("Incorrect token count for homing cmd.");
+        }
+        else if (cmd == SET_SPEED)
+        {
+            if (token_count != 3)
+                throw std::invalid_argument("Incorrect token count for setting speed.");
         }
         else // all other cmds.
         {
-            if (token_count != 3)
-                throw std::invalid_argument("");
+            if (token_count != 4)
+                throw std::invalid_argument("Incorrect token count.");
         }
 
-        // Extract Motor Args.
+        // Extract Motors.
         int motor_count;
         char* motor_strs[NUM_BMCS]; // Container for ptrs to motor strings.
         motor_count = extract_tokens(tokens[1], ",", motor_strs, NUM_BMCS);
@@ -96,33 +100,64 @@ void UserIOHandler::parse_msg()
 
         // Bail-early for cmds without additional args.
         if (cmd == HOME || cmd == HOME_IN_PLACE)
-        {
             return;
+
+        // TODO: clean up this next section.
+        if (cmd == SET_SPEED)
+        {
+            // Extract Motor Settings (Duty cycle, time in ms, etc.).
+            int motor_arg_count;
+            char* motor_vals_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+            motor_arg_count = extract_tokens(tokens[2], ",", motor_vals_strs,
+                                             NUM_BMCS);
+            if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
+                throw std::invalid_argument("");
+            for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
+            {
+                parsed_msg_.motor_values[bmc_index] =
+                    std::stoi(motor_vals_strs[bmc_index]);
+            }
         }
 
-        // Extract Motor Duty Cycles.
-        int motor_arg_count;
-        char* motor_vals_strs[NUM_BMCS]; // Container for ptrs to motor strings.
-        motor_arg_count = extract_tokens(tokens[2], ",", motor_vals_strs,
-                                         NUM_BMCS);
-        if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
-            throw std::invalid_argument("");
-        for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
+        if (cmd == TIME_MOVE || cmd == DIST_MOVE)
         {
-            parsed_msg_.motor_values[bmc_index] =
-                std::stoi(motor_vals_strs[bmc_index]);
+            int motor_dir_count;
+            char* motor_dirs_strs[NUM_BMCS]; // Container for ptrs to dir strings.
+            motor_dir_count = extract_tokens(tokens[2], ",", motor_dirs_strs,
+                                             NUM_BMCS);
+            if (motor_dir_count < 0 || motor_dir_count != parsed_msg_.motor_count)
+                throw std::invalid_argument("");
+            for (uint8_t bmc_index = 0; bmc_index < motor_dir_count; ++bmc_index)
+            {
+                parsed_msg_.directions[bmc_index] =
+                    MotorController::dir_t(std::stoi(motor_dirs_strs[bmc_index]));
+            }
+
+            // Extract Motor Settings (Duty cycle, time in ms, etc.).
+            int motor_arg_count;
+            char* motor_vals_strs[NUM_BMCS]; // Container for ptrs to motor strings.
+            motor_arg_count = extract_tokens(tokens[3], ",", motor_vals_strs,
+                                             NUM_BMCS);
+            if (motor_arg_count < 0 || motor_arg_count != parsed_msg_.motor_count)
+                throw std::invalid_argument("");
+            for (uint8_t bmc_index = 0; bmc_index < motor_arg_count; ++bmc_index)
+            {
+                parsed_msg_.motor_values[bmc_index] =
+                    std::stoi(motor_vals_strs[bmc_index]);
+            }
         }
 
         // Data checks.
 
         // TODO:
-        // check tha data is signed/sized in the way that is command-appropriate
+        // check that data is signed/sized in the way that is command-appropriate
         // check that motor indices are unique
     }
     catch (std::invalid_argument& e) // stoi throws this and so do we.
     {
         msg_is_malformed_ = true;
         printf("Error User Input is invalid.\r\n");
+        printf(e.what());
     }
 }
 
@@ -166,6 +201,8 @@ Cmd UserIOHandler::cmd_str_to_cmd(char* cmd_str)
             return HOME_IN_PLACE;
         if (std::strcmp(cmd_str, "HOME_ALL") == 0)
             return HOME_ALL;
+        if (std::strcmp(cmd_str, "SET_SPEED") == 0)
+            return SET_SPEED;
         if (std::strcmp(cmd_str, "HOME_ALL_IN_PLACE") == 0)
             return HOME_ALL_IN_PLACE;
         return ERROR;

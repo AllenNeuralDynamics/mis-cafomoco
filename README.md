@@ -14,16 +14,16 @@ pip install -e .
 ````
 
 ## Low Level Serial Command Overview:
+Most commands can refer to several motors at once with unique arguments.
+Motor lists are separated by commas; argument lists are separated by commas.
 
-| Command                                   | Example            | Description                                                                                                            |
-|-------------------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------|
-| `is_busy`                                 | `is_busy`          | returns 1 if the device is busy; 0 otherwise.                                                                          |
-| `mv_time <camera_index> <clockwise> <ms>` | `mv_time 0 1 3000` | Rotate selected cameras (0 through 3) clockwise (if 1, otherwise ccw) for specified amount of time (in milliseconds).  |
-| `mv_angle <camera_index> <signed_angle>`  | `mv_angle 2 -30`   | Rotate the selected camera (0 through 3) the signed angle amount in degrees.                                           |
-| `zero <camera_index>`                     | `zero 3`           | Sets the corresponding motor's angle to zero.                                                                          |
-| `home <camera_index>`                     | `home 0`           | Rotate selected camera (0 through 3) the most counterclockwise angle. Set that angle as zero.                          |
-| `homeall`                                 | `homeall`          | Rotate all cameras to the most counterclockwise angle and set all angles to zero.                                      |
-|                                           |                    |                                                                                                                        |
+## Commands
+
+| Command                                                                     | Example                     | Description                                                                                             |
+|-----------------------------------------------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------|
+| `is_busy`                                                                   | `is_busy`                   | Hangs if the device is busy. returns `False\r\n` when the device is not busy;                           |
+| `TIME_MOVE <camera_index>,<camera_index> <clockwise>,<clockwise> <ms>,<ms>` | `mv_time 0,1 1,1 3000,3000` | Rotate selected cameras (0 and 1) clockwise (if 1, otherwise ccw) for specified time (in milliseconds). |
+|                                                                             |                             |                                                                                                         |
 
 
 ## Hardware Overview:

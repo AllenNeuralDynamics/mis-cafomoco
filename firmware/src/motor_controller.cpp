@@ -1,10 +1,14 @@
 #include <motor_controller.h>
 
+#ifdef DEBUG
+constexpr const char* const MotorController::state_as_str[];
+#endif
+
 MotorController::MotorController(EnDirMotorDriver& motor_driver,
                                  CPUEncoder& encoder)
     :motor_driver_{motor_driver}, encoder_{encoder},
     stuck_moving_{false}, state_{MotorController::BMCState::IDLE},
-    set_speed_{0}
+    set_speed_{0}, move_direction_{MotorController::FORWARD}
 {
     motor_driver_.set_duty_cycle(0);
 }
@@ -34,15 +38,25 @@ void MotorController::set_pwm_frequency(uint32_t freq_hz)
 }
 
 
-void MotorController::move_ms(uint32_t milliseconds)
+void MotorController::move_ms(uint32_t milliseconds,
+                              MotorController::dir_t direction)
 {
+    // Bail early and ignore user input if we can't accept it.
+    if (is_busy())
+        return;
+
     // increase the movement time.
     set_move_time_ms_ = milliseconds;
+    move_direction_ = direction;
 }
 
 
 void MotorController::move_relative_angle(float angle)
 {
+    // Bail early and ignore user input if we can't accept it.
+    if (is_busy())
+        return;
+
     // increase the movement angle.
     //TODO;
 }
@@ -108,6 +122,7 @@ void MotorController::update()
     }
     else if (state_ == TIME_MOVE && next_state == IDLE)
     {
+        set_move_time_ms_ = 0;
         move_start_time_ms_ = 0;
         motor_driver_.disable_output();
     }
@@ -115,7 +130,8 @@ void MotorController::update()
 
 #ifdef DEBUG
     if (state_ != next_state)
-        printf("Changing states from: %d to %d\r\n", state_, next_state);
+        printf("Changing states from: %s to %s\r\n", state_as_str[state_],
+                                                     state_as_str[next_state]);
 #endif
 
     // Change states.

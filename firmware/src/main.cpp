@@ -24,7 +24,7 @@ CPUEncoder encoders[NUM_BMCS]
      CPUEncoder(read_buffer_ptr, 2),
      CPUEncoder(read_buffer_ptr, 3)};
 
-MotorController bmcs[NUM_BMCS]
+MotorController mcs[NUM_BMCS]
     {MotorController(motor_drivers[0], encoders[0]),
      MotorController(motor_drivers[1], encoders[1]),
      MotorController(motor_drivers[2], encoders[2]),
@@ -32,14 +32,14 @@ MotorController bmcs[NUM_BMCS]
 
 
 /**
- * \brief true if all bmcs are idle. false otherwise.
+ * \brief true if all mcs are idle. false otherwise.
  */
 bool system_is_busy(void)
 {
     // This could be sped up with bitfields.
-    for (auto const& bmc : bmcs)
+    for (auto const& mc : mcs)
     {
-        if (bmc.state_ != MotorController::IDLE)
+        if (mc.is_busy())
             return true;
     }
     return false;
@@ -49,9 +49,9 @@ bool system_is_busy(void)
 void update_motor_states(void)
 {
     // Update the state of all motor controllers.
-    for (auto & bmc : bmcs)
+    for (auto & mc : mcs)
     {
-        bmc.update();
+        mc.update();
     }
 }
 
@@ -61,13 +61,13 @@ void update_motor_states(void)
  */
 void handle_user_msg(ParsedUserMsg& user_msg)
 {
+    // Dispatch message.
     switch (user_msg.cmd)
     {
         case IS_BUSY:
-            // Tell the user if any BMC is moving.
-            if (system_is_busy())
-                printf("True\r\n");
-            else
+            // Provide status indication when the system is idle.
+            // Useful for polling from a serial port without cluttering output.
+            if (!system_is_busy())
                 printf("False\r\n");
             break;
         case SET_SPEED:
@@ -75,18 +75,31 @@ void handle_user_msg(ParsedUserMsg& user_msg)
             {
                 uint8_t& motor_index = user_msg.motor_indexes[i];
                 uint8_t& speed_in_percent = (uint8_t&)(user_msg.motor_values[i]);
-                bmcs[motor_index].set_speed_percentage(speed_in_percent);
+                mcs[motor_index].set_speed_percentage(speed_in_percent);
             }
             break;
         case TIME_MOVE:
             // move specified motors for specified amount of time.
-            // issue_time_move(user_msg);
             for (auto i = 0; i < user_msg.motor_count;++i)
             {
                 uint8_t& motor_index = user_msg.motor_indexes[i];
+                MotorController::dir_t& direction = user_msg.directions[i];
                 uint32_t& move_time_ms = (uint32_t&)(user_msg.motor_values[i]);
+                #ifdef DEBUG
+                // Do some light user input checks.
+                if (mcs[motor_index].is_busy())
+                {
+                    printf("Skipping motor %d since it is busy.\r\n");
+                    continue;
+                }
+                if (mcs[motor_index].get_speed_setting() == 0)
+                {
+                    printf("Skipping motor %d since it has no set speed.\r\n");
+                    continue;
+                }
                 printf("Moving motor %d for %d\r\n",motor_index, move_time_ms);
-                bmcs[motor_index].move_ms(move_time_ms);
+                #endif
+                mcs[motor_index].move_ms(move_time_ms, direction);
             }
             break;
         case DIST_MOVE:
@@ -147,8 +160,6 @@ int main()
 
     uint32_t curr_time;
     uint32_t prev_time;
-    curr_time = to_ms_since_boot(get_absolute_time());
-    prev_time = curr_time;
     static const uint32_t LOOP_INTERVAL = 100;
     while(true)
     {
@@ -158,11 +169,15 @@ int main()
         // Update state of all BMCs accordingly.
         if (user_handler.new_msg())
         {
+            #ifdef DEBUG
             printf("Received: %s\r\n", user_handler.raw_buffer_); // make private.
+            #endif
             user_handler.parse_msg();
             if (user_handler.msg_is_malformed())
             {
+                #ifdef DEBUG
                 printf("Message is malformed.\r\n");
+                #endif
                 user_handler.clear_msg();
                 continue;
             }
@@ -170,17 +185,7 @@ int main()
             handle_user_msg(user_msg);
             user_handler.clear_msg();
         }
-
         update_motor_states();
-        curr_time = to_ms_since_boot(get_absolute_time());
-        if (curr_time - prev_time >= LOOP_INTERVAL)
-        {
-            prev_time = curr_time;
-            printf("motor states: ");
-            for (auto i=0;i<NUM_BMCS;++i)
-                printf("|%d|", uint8_t(bmcs[NUM_BMCS].state_));
-            printf("\r");
-        }
     }
 
     return 0;
