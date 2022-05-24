@@ -25,8 +25,8 @@ enum Cmd
 
 
 // User should be able to invoke:
-//    "TIME_MOVE 2,3 500,500"
-// Result would move motors 2 and 3 for 500 [ms] each.
+//    "TIME_MOVE 2,3 0,1 500,500"
+// Result would move motors 2 and 3 forward for 500 [ms] each.
 struct ParsedUserMsg
 {
     Cmd cmd;

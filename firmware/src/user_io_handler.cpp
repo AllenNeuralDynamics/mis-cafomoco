@@ -54,10 +54,11 @@ void UserIOHandler::parse_msg()
     int token_count;
     char* tokens[MAX_TOKENS]; // Container to hold the start of all tokens.
 
-    // Try-Catch everythign so we can flag an error before exiting.
-     try {
+    // Try-Catch everything so we can flag an error before exiting.
+    try
+    {
         token_count = extract_tokens(raw_buffer_, " \r\n", tokens, MAX_TOKENS);
-        if (token_count < 0)
+        if (token_count <= 0)
             throw std::invalid_argument("Token count must be nonzero.");
         parsed_msg_.cmd = cmd_str_to_cmd(tokens[0]);
 
@@ -156,8 +157,10 @@ void UserIOHandler::parse_msg()
     catch (std::invalid_argument& e) // stoi throws this and so do we.
     {
         msg_is_malformed_ = true;
+        #ifdef DEBUG
         printf("Error User Input is invalid.\r\n");
         printf(e.what());
+        #endif
     }
 }
 

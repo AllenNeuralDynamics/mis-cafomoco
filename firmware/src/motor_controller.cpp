@@ -22,12 +22,10 @@ MotorController::~MotorController()
 
 void MotorController::set_speed_percentage(uint8_t speed_percentage)
 {
-    // TODO: clamp the input.
-
     // Clear output duty cycle on startup.
     motor_driver_.set_duty_cycle(speed_percentage);
 
-    // TODO: should we save it?
+    // Save speed setting.
     set_speed_ = speed_percentage;
 }
 
@@ -118,6 +116,7 @@ void MotorController::update()
     if (state_ == IDLE && next_state == TIME_MOVE)
     {
         move_start_time_ms_ = to_ms_since_boot(get_absolute_time());
+        motor_driver_.set_dir(bool(move_direction_));
         motor_driver_.enable_output();
     }
     else if (state_ == TIME_MOVE && next_state == IDLE)

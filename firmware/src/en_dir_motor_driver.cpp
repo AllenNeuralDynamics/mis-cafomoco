@@ -50,9 +50,6 @@ void EnDirMotorDriver::set_duty_cycle(uint8_t duty_cycle_percentage)
     {
         duty_cycle_percentage = 100;
     }
-    // Clear output duty cycle on startup.
-    pwm_set_chan_level(slice_num_, gpio_channel_, duty_cycle_percentage);
-
     // Save it for enabling/disabling.
     duty_cycle_ = duty_cycle_percentage;
 }

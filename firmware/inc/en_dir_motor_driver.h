@@ -54,7 +54,11 @@ public:
     void disable_output(void)
     {pwm_set_chan_level(slice_num_, gpio_channel_, 0);}
 
-//    void set_dir(dir_t direction);
+    /**
+     * \brief disable the pwm output
+     * \note inline.
+     */
+    void set_dir(bool dir) {gpio_put(dir_pin_, dir);}
 
 private:
     uint torque_pwm_pin_;

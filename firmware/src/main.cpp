@@ -109,12 +109,16 @@ void handle_user_msg(ParsedUserMsg& user_msg)
         case DIST_MOVE:
             // handle the motors being issued dist move commands.
             // issue_dist_move(user_msg);
+            #ifdef DEBUG
             printf("Not implemented.\r\n");
+            #endif
             break;
         case HOME:
             // handle the motors being issued a home command.
             // issue_home_cmd(user_msg)
+            #ifdef DEBUG
             printf("Not implemented.\r\n");
+            #endif
             break;
         case HOME_IN_PLACE:
             // handle the motors being issued a home in place command.
@@ -137,15 +141,21 @@ void handle_user_msg(ParsedUserMsg& user_msg)
             break;
         case HOME_ALL:
             // home all motors.
+            #ifdef DEBUG
             printf("Not implemented.\r\n");
+            #endif
             break;
         case HOME_ALL_IN_PLACE:
             // zero out the location of all motors.
+            #ifdef DEBUG
             printf("Not implemented.\r\n");
+            #endif
             break;
         default:
             // shouldn't happen bc enum and message checking.
+            #ifdef DEBUG
             printf("Not a valid command.\r\n");
+            #endif
             break;
     }
 }
@@ -161,9 +171,6 @@ int main()
     // launch the encoder reading/updating process on Core1.
     multicore_launch_core1(core1_main);
 
-    uint32_t curr_time;
-    uint32_t prev_time;
-    static const uint32_t LOOP_INTERVAL = 100;
     while(true)
     {
         // Pull chars out of the USB buffer.
@@ -173,7 +180,7 @@ int main()
         if (user_handler.new_msg())
         {
             #ifdef DEBUG
-            printf("Received: %s\r\n", user_handler.raw_buffer_); // make private.
+            printf("Received: %s             \r\n", user_handler.raw_buffer_); // make private.
             #endif
             user_handler.parse_msg();
             if (user_handler.msg_is_malformed())
@@ -189,6 +196,10 @@ int main()
             user_handler.clear_msg();
         }
         update_motor_states();
+        #ifdef DEBUG
+        printf("time: %07d | Enc0 ticks: %07d\r",
+                to_ms_since_boot(get_absolute_time()), encoders[0].get_ticks());
+        #endif
     }
 
     return 0;
