@@ -17,7 +17,7 @@ public:
      *          provides a simple, replacable, interface to accessing the
      *          encoder count.
      */
-    CPUEncoder(uint32_t* base_address_ptr, uint32_t offset);
+    CPUEncoder(int32_t* base_address_ptr, uint32_t offset);
 
     ~CPUEncoder();
 
@@ -35,7 +35,7 @@ public:
     void zero();
 
 private:
-    uint32_t* base_address_ptr_;
+    int32_t* base_address_ptr_;
     uint32_t offset_;
 
     int32_t tick_offset_; // For "zeroing" the encoder count.

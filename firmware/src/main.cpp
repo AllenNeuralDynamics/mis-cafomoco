@@ -85,20 +85,24 @@ void handle_user_msg(ParsedUserMsg& user_msg)
                 uint8_t& motor_index = user_msg.motor_indexes[i];
                 MotorController::dir_t& direction = user_msg.directions[i];
                 uint32_t& move_time_ms = (uint32_t&)(user_msg.motor_values[i]);
-                #ifdef DEBUG
                 // Do some light user input checks.
                 if (mcs[motor_index].is_busy())
                 {
+                #ifdef DEBUG
                     printf("Skipping motor %d since it is busy.\r\n");
+                #endif
                     continue;
                 }
                 if (mcs[motor_index].get_speed_setting() == 0)
                 {
+                #ifdef DEBUG
                     printf("Skipping motor %d since it has no set speed.\r\n");
+                #endif
                     continue;
                 }
+            #ifdef DEBUG
                 printf("Moving motor %d for %d\r\n",motor_index, move_time_ms);
-                #endif
+            #endif
                 mcs[motor_index].move_ms(move_time_ms, direction);
             }
             break;
@@ -114,7 +118,22 @@ void handle_user_msg(ParsedUserMsg& user_msg)
             break;
         case HOME_IN_PLACE:
             // handle the motors being issued a home in place command.
-            printf("Not implemented.\r\n");
+            for (auto i = 0; i < user_msg.motor_count;++i)
+            {
+                uint8_t& motor_index = user_msg.motor_indexes[i];
+                // Do some light user input checks.
+                if (mcs[motor_index].is_busy())
+                {
+                #ifdef DEBUG
+                    printf("Skipping motor %d since it is busy.\r\n");
+                #endif
+                    continue;
+                }
+            #ifdef DEBUG
+                printf("Zeroing motor %d.\r\n",motor_index);
+            #endif
+                encoders[motor_index].zero();
+            }
             break;
         case HOME_ALL:
             // home all motors.
@@ -141,22 +160,6 @@ int main()
 
     // launch the encoder reading/updating process on Core1.
     multicore_launch_core1(core1_main);
-
-
-/*
-    uint32_t* read_buffer_ptr_cpy;
-    while(true)
-    {
-        sleep_ms(500);
-        // Note: copy the read ptr so we can finish reading it out.
-        read_buffer_ptr_cpy = read_buffer_ptr;
-        printf("Encoder data: %d | %d | %d | %d\r\n", read_buffer_ptr_cpy[0],
-                                                      read_buffer_ptr_cpy[1],
-                                                      read_buffer_ptr_cpy[2],
-                                                      read_buffer_ptr_cpy[3]);
-    }
-    // rest is unreachable for now.
-*/
 
     uint32_t curr_time;
     uint32_t prev_time;

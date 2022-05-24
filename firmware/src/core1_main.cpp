@@ -6,9 +6,9 @@
 #endif
 
 // Double buffer for writing encoder data (Core1) and reading it (Core0).
-uint32_t encoder_buffers[2][NUM_BMCS];
-uint32_t* write_buffer_ptr = encoder_buffers[0];
-uint32_t* read_buffer_ptr = encoder_buffers[1];
+int32_t encoder_buffers[2][NUM_BMCS];
+int32_t* write_buffer_ptr = encoder_buffers[0];
+int32_t* read_buffer_ptr = encoder_buffers[1];
 
 // raw gpio value from the previous read.
 uint32_t prev_state;
@@ -27,9 +27,9 @@ void init_encoder_pins()
 }
 
 
-int32_t get_encoder_increment(uint8_t prev_state, uint8_t curr_state)
+int32_t get_encoder_increment(uint32_t prev_state, uint32_t curr_state)
 {
-    switch (uint8_t((prev_state << 2) || curr_state))
+    switch ( uint8_t( (prev_state << 2) | curr_state) )
     {
         // forward cases:
         case 0b0001:
@@ -54,6 +54,7 @@ int32_t get_encoder_increment(uint8_t prev_state, uint8_t curr_state)
         default:
             return 0;
     }
+        return 0; // should never happen.
 }
 
 // Update each encoder value based on new inputs and store in the write buffer.
@@ -67,12 +68,12 @@ void update_encoders()
     for (auto i=0;i<NUM_BMCS;++i)
     {
         // State machine logic.
-        increment = get_encoder_increment((prev_state >> 2*i)& 0x0003,
-                                          (curr_state >> 2*i)) & 0x0003;
+        increment = get_encoder_increment(((prev_state >> 2*i) & 0x00000003),
+                                          ((curr_state >> 2*i) & 0x00000003));
         // Write values into double buffer.
         write_buffer_ptr[i] = read_buffer_ptr[i] + increment;
     }
-    curr_state = prev_state;
+    prev_state = curr_state;
 }
 
 
@@ -97,7 +98,7 @@ void core1_main()
     prev_state = gpio_get_all() >> ENCODER_BASE_OFFSET;
 
     // Loop forever. Read Encoders and write new positions. Switch buffers.
-    uint32_t* tmp;
+    int32_t* tmp;
     while(true)
     {
 #ifdef PROFILE_ENCODER_LOOP

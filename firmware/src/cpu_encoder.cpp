@@ -1,6 +1,6 @@
 #include <cpu_encoder.h>
 
-CPUEncoder::CPUEncoder(uint32_t* base_address_ptr,
+CPUEncoder::CPUEncoder(int32_t* base_address_ptr,
                        uint32_t offset)
     :base_address_ptr_{base_address_ptr}, offset_{offset}, tick_offset_{0}
 {

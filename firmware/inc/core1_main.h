@@ -7,9 +7,12 @@
 #ifdef PROFILE_ENCODER_LOOP
 #include <stdio.h>
 #endif
+#ifdef DEBUG
+#include <stdio.h>
+#endif
 
 // Double buffer ptr for sharing access to the encoder data across cores.
-extern uint32_t* read_buffer_ptr;
+extern int32_t* read_buffer_ptr;
 // flag for resetting the value of an encoder.
 //extern uint32_t* reset_ptr;
 
