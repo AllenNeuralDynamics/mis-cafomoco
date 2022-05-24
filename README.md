@@ -21,7 +21,7 @@ Motor lists are separated by commas; argument lists are separated by commas.
 
 | Command                                                           | Example                       | Description                                                                                             |
 |-------------------------------------------------------------------|-------------------------------|---------------------------------------------------------------------------------------------------------|
-| `is_busy`                                                         | `is_busy`                     | Hangs if the device is busy. returns `False\r\n` when the device is not busy;                           |
+| `is_busy`                                                         | `is_busy`                     | Returns `True\r\n` if any motor is moving. returns `False\r\n` when the device is not busy;             |
 | `SET_SPEED <motor_0>,<motor_1> <m0_percent>,<m1_percent>`         | `SET_SPEED 3,2,4 50,50,60`    | Set the speed of motors 3, 2, and 4 to 50%, 50%, and 60% repsectively.                                  |
 | `TIME_MOVE <motor_0>,<motor_1> <clockwise>,<clockwise> <ms>,<ms>` | `TIME_MOVE 0,1 1,1 3000,3000` | Rotate selected cameras (0 and 1) clockwise (if 1, otherwise ccw) for specified time (in milliseconds). |
 |                                                                   |                               |                                                                                                         |

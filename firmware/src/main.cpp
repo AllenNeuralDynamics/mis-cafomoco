@@ -67,7 +67,9 @@ void handle_user_msg(ParsedUserMsg& user_msg)
         case IS_BUSY:
             // Provide status indication when the system is idle.
             // Useful for polling from a serial port without cluttering output.
-            if (!system_is_busy())
+            if (system_is_busy())
+                printf("True\r\n");
+            else
                 printf("False\r\n");
             break;
         case SET_SPEED:
