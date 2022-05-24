@@ -28,12 +28,17 @@ public:
 
     /**
      * \brief reset the encoder counter.
+     * \note offsetting is handled in this class since 2's complement math
+     *       handles rollover gracefully and handling it at the buffer would
+     *       require mutexes.
      */
     void zero();
 
 private:
     uint32_t* base_address_ptr_;
     uint32_t offset_;
+
+    int32_t tick_offset_; // For "zeroing" the encoder count.
 };
 
 #endif // CPU_ENCODER_H
