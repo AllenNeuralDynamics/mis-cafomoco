@@ -19,11 +19,11 @@ Motor lists are separated by commas; argument lists are separated by commas.
 
 ## Commands
 
-| Command                                                                     | Example                     | Description                                                                                             |
-|-----------------------------------------------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------|
-| `is_busy`                                                                   | `is_busy`                   | Hangs if the device is busy. returns `False\r\n` when the device is not busy;                           |
-| `TIME_MOVE <camera_index>,<camera_index> <clockwise>,<clockwise> <ms>,<ms>` | `mv_time 0,1 1,1 3000,3000` | Rotate selected cameras (0 and 1) clockwise (if 1, otherwise ccw) for specified time (in milliseconds). |
-|                                                                             |                             |                                                                                                         |
+| Command                                                                     | Example                     | Description                                                                                               |
+|-----------------------------------------------------------------------------|-------------------------------|---------------------------------------------------------------------------------------------------------|
+| `is_busy`                                                                   | `is_busy`                     | Hangs if the device is busy. returns `False\r\n` when the device is not busy;                           |
+| `TIME_MOVE <camera_index>,<camera_index> <clockwise>,<clockwise> <ms>,<ms>` | `TIME_MOVE 0,1 1,1 3000,3000` | Rotate selected cameras (0 and 1) clockwise (if 1, otherwise ccw) for specified time (in milliseconds). |
+|                                                                             |                             |                                                                                                           |
 
 
 ## Hardware Overview:
