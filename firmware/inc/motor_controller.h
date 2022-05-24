@@ -5,6 +5,9 @@
 #include <hardware/pwm.h>
 #include <cpu_encoder.h>
 #include <en_dir_motor_driver.h>
+#ifdef DEBUG
+#include <stdio.h>
+#endif
 
 // All BMC States that do not return immediately.
 

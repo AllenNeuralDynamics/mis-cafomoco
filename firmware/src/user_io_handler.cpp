@@ -112,11 +112,17 @@ void UserIOHandler::parse_msg()
             parsed_msg_.motor_values[bmc_index] =
                 std::stoi(motor_vals_strs[bmc_index]);
         }
+
+        // Data checks.
+
+        // TODO:
+        // check tha data is signed/sized in the way that is command-appropriate
+        // check that motor indices are unique
     }
     catch (std::invalid_argument& e) // stoi throws this and so do we.
     {
         msg_is_malformed_ = true;
-        printf("Error User Input is invalid.");
+        printf("Error User Input is invalid.\r\n");
     }
 }
 

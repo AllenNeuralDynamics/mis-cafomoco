@@ -26,6 +26,11 @@ public:
      */
     int32_t get_ticks();
 
+    /**
+     * \brief reset the encoder counter.
+     */
+    void zero();
+
 private:
     uint32_t* base_address_ptr_;
     uint32_t offset_;

@@ -16,3 +16,10 @@ int32_t CPUEncoder::get_ticks()
     return *(base_address_ptr_ + offset_);
 }
 
+
+void CPUEncoder::zero()
+{
+    // Not implemented. This needs to be implemented with a mutex since both
+    // cores will be changing a shared value.
+    //reset_ptr |= (1 << offset_);
+}

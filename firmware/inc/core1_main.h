@@ -10,6 +10,8 @@
 
 // Double buffer ptr for sharing access to the encoder data across cores.
 extern uint32_t* read_buffer_ptr;
+// flag for resetting the value of an encoder.
+//extern uint32_t* reset_ptr;
 
 // function prototypes
 void update_encoders();

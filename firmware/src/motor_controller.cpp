@@ -113,6 +113,11 @@ void MotorController::update()
     }
     else {}
 
+#ifdef DEBUG
+    if (state_ != next_state)
+        printf("Changing states from: %d to %d\r\n", state_, next_state);
+#endif
+
     // Change states.
     state_ = next_state;
 }

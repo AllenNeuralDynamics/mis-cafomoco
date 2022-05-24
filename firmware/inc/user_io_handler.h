@@ -30,7 +30,7 @@ struct ParsedUserMsg
     Cmd cmd;
     // args
     uint8_t motor_indexes[NUM_BMCS];
-    uint8_t motor_values[NUM_BMCS];
+    int32_t motor_values[NUM_BMCS];
     // Other useful stuff about the message.
     uint8_t motor_count{0};
 };
