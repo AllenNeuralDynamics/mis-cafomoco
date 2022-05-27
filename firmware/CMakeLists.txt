@@ -46,7 +46,7 @@ include_directories(inc)
 
 # For Debugging. Check how many CPU cycles an encoder reading iteration takes.
 #add_definitions(-DPROFILE_ENCODER_LOOP)
-#add_definitions(-DDEBUG)
+add_definitions(-DDEBUG)
 
 
 # Link libraries to the targets that need them.

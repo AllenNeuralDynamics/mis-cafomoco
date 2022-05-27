@@ -199,8 +199,10 @@ int main()
         }
         update_motor_states();
         #ifdef DEBUG
-        printf("time: %07d | Enc0 ticks: %07d\r",
-                to_ms_since_boot(get_absolute_time()), encoders[0].get_ticks());
+        printf("time: %07d | Enc0 ticks: %07d | Enc1 ticks: %07d\r",
+                to_ms_since_boot(get_absolute_time()),
+                encoders[0].get_ticks(),
+                encoders[1].get_ticks());
         #endif
     }
 
