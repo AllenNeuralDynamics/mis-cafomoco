@@ -87,7 +87,6 @@ class MulticamFocusRig:
                 pass
 
 
-
     @property
     def is_busy(self):
         """True if the device is busy. False otherwise."""

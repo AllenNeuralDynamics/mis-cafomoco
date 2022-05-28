@@ -11,5 +11,5 @@ if __name__ == "__main__":
     print("done.")
 
     # Set the speed.
-    focus_rig.set_speed(0, 50)
-    focus_rig.time_move(0, True, 3000) # move motor 0 forward for 3[sec]; wait.
+    focus_rig.set_speeds([0, 1, 2, 3], [30, 30, 30, 30])
+    focus_rig.time_moves([0, 1, 2, 3], [True, True, True, True], [1000, 1000, 1000, 1000])
