@@ -102,6 +102,12 @@ public:
      */
     bool msg_is_malformed(){return msg_is_malformed_;}
 
+    /**
+     * \brief true if we have not yet processed data in the input buffer.
+     * \note inline
+     */
+    bool unhandled_incoming_chars(){return buff_index_ > 0;}
+
 
     /**
      * \brief run state machine based on provided input.

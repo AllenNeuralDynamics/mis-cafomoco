@@ -11,7 +11,7 @@ setuptools.setup(
     description="a library for controlling the multicam focus rig",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/AllenNeuralDynamics/mis-multicam-focus",
+    url="https://github.com/AllenNeuralDynamics/mis-cafomoco",
     packages=setuptools.find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

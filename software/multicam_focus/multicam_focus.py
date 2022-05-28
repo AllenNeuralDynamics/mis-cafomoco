@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 import serial
+import re
 from serial.serialutil import SerialException
+
+
+# TODO: consider case where we send commands to the device faster than it can process them.
 
 
 class MulticamFocusRings:
@@ -31,33 +35,65 @@ class MulticamFocusRings:
             raise
 
 
-
-    def set_speed(self, motor_index : int, speed_percentage : int):
+    def set_speed(self, motor_index : int, speed_percentage : int, wait=True):
         """set the corresponding motor's speed."""
 
         cmd = f"SET_SPEED {motor_index} {speed_percentage}\r\n".encode("ascii")
-        self.serial_port.write(cmd)
+        self._blocking_write(cmd)
+        if wait:
+            while self.is_busy:
+                pass
 
 
-    def time_move(self, motor_index: int, forward: bool, move_time_ms)
+    def time_move(self, motor_index: int, forward: bool, move_time_ms, wait=True)
         """Rotate the specified motor forward (or backwards) for a specified number of milliseconds.
 
         :param forward: moves the device forward if true; otherwise backwards.
         """
         direction = 1 if forward else 0
         cmd = f"TIME_MOVE {motor_index} {direction} {move_time_ms}\r\n".encode("ascii")
-        self.serial_port.write(cmd)
+        self._blocking_write(cmd)
+        if wait:
+            while self.is_busy:
+                pass
+
+
 
     @property
     def is_busy(self):
-        """True if the device is busy; false otherwise.
+        """True if the device is busy. False otherwise."""
 
-        Blocks for a serial port reply or timeout.
+        response = self._blocking_read()
+        if response == "True":
+            return True
+        return False
+
+
+    def _blocking_write(self, message):
+        """Write a string; wait until it has exited the PC."""
+        self.serial_port.write(message)
+        while self.serial_port.out_waiting:
+            pass
+
+
+    def _blocking_read(self):
+        """ Read an entire message.
+        Blocks until an entire reply is received or timeout.
         """
         # make sure there is nothin the buffer to begin with. (Check that message is complete too.)
 
         cmd = "IS_BUSY\r\n".encode("ascii")
-        self.serial_port.write(cmd)
+        self._blocking_write(cmd)
 
-        # wait for a carriage return.
-        raise NotImplementedError
+        # Read until the end of the line. Collect a fully-formed line before
+        # processing input.
+        # Tips from:
+        # https://stackoverflow.com/questions/1093598/pyserial-how-to-read-the-last-line-sent-from-a-serial-device
+        recv_buffer = []
+        while True:
+            if '\n' == recv_buffer[-1]:
+                break
+            recv_buffer += ser.read(1) # blocks until we get at least one char or timeout.
+        # strip off \r\n
+        return re.split("\r\n", "".join(recv_buffer))[0]
+

@@ -6,13 +6,6 @@ A serial interface for focusing 4x cameras on the MIS rig
 
 **BLOCK DIAGRAM HERE**
 
-## Python Driver
-
-From this directory, install the driver with
-````
-pip install -e .
-````
-
 ## Low Level Serial Command Overview:
 Most commands can refer to several motors at once with unique arguments.
 Motor lists are separated by commas; argument lists are separated by commas.

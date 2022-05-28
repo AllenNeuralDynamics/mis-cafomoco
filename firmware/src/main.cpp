@@ -32,7 +32,7 @@ MotorController mcs[NUM_BMCS]
 
 
 /**
- * \brief true if all mcs are idle. false otherwise.
+ * \brief true only if all mcs are idle and there's nothing in the input buffer.
  */
 bool system_is_busy(void)
 {
@@ -42,7 +42,7 @@ bool system_is_busy(void)
         if (mc.is_busy())
             return true;
     }
-    return false;
+    return user_handler.unhandled_incoming_chars();
 }
 
 
