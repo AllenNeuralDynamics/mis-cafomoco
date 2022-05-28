@@ -7,7 +7,7 @@ from serial.serialutil import SerialException
 # TODO: consider case where we send commands to the device faster than it can process them.
 
 
-class MulticamFocusRings:
+class MulticamFocusRig:
     """Class for interacting with the focus rings of the MIS instrument."""
 
     # On Linux, the symlink to the first detected vibratome.
@@ -52,6 +52,35 @@ class MulticamFocusRings:
         """
         direction = 1 if forward else 0
         cmd = f"TIME_MOVE {motor_index} {direction} {move_time_ms}\r\n".encode("ascii")
+        self._blocking_write(cmd)
+        if wait:
+            while self.is_busy:
+                pass
+
+
+    def set_speeds(self, motor_indices : list, speed_percentages: list,
+                   wait: bool = True)
+
+        # Convert to comma-delimited string of args.
+        motors = "".join(str(motor_indices).strip("[]").split())
+        speeds = "".join(str(speed_percentages).strip("[]").split())
+        cmd = f"SET_SPEED {motors} {speeds}\r\n".encode("ascii")
+        self._blocking_write(cmd)
+        if wait:
+            while self.is_busy:
+                pass
+
+
+    def time_moves(self, motor_indices : list[int],
+                   speed_percentages: list[int], direction_indices : list[bool],
+                   wait: bool = True)
+
+        # Convert to comma-delimited string of args.
+        motors = "".join(str(motor_indices).strip("[]").split())
+        dirs_as_ints = [int(direction) for direction in direction_indices]
+        dirs = "".join(str(dirs_as_ints).strip("[]").split())
+        speeds = "".join(str(speed_percentages).strip("[]").split())
+        cmd = f"TIME_MOVE {motors} {directions} {speeds}\r\n".encode("ascii")
         self._blocking_write(cmd)
         if wait:
             while self.is_busy:
