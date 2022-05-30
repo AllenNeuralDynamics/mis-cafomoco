@@ -12,23 +12,23 @@ UserIOHandler user_handler;
 
 // Motor Controller Objects need to be on their own slices.
 EnDirMotorDriver motor_drivers[NUM_BMCS]
-    {EnDirMotorDriver(0, 1), // PWM Slice 0
-     EnDirMotorDriver(2, 3), // PWM Slice 1
-     EnDirMotorDriver(4, 5), // PWM Slice 2
-     EnDirMotorDriver(6, 7)};// PWM Slice 3
+    {{0, 1}, // PWM Slice 0
+     {2, 3}, // PWM Slice 1
+     {4, 5}, // PWM Slice 2
+     {6, 7}};// PWM Slice 3
 
 // Assign encoder instances to their memory location.
 CPUEncoder encoders[NUM_BMCS]
-    {CPUEncoder(read_buffer_ptr, 0),
-     CPUEncoder(read_buffer_ptr, 1),
-     CPUEncoder(read_buffer_ptr, 2),
-     CPUEncoder(read_buffer_ptr, 3)};
+    {{read_buffer_ptr, 0},
+     {read_buffer_ptr, 1},
+     {read_buffer_ptr, 2},
+     {read_buffer_ptr, 3}};
 
 MotorController mcs[NUM_BMCS]
-    {MotorController(motor_drivers[0], encoders[0]),
-     MotorController(motor_drivers[1], encoders[1]),
-     MotorController(motor_drivers[2], encoders[2]),
-     MotorController(motor_drivers[3], encoders[3])};
+    {{motor_drivers[0], encoders[0]},
+     {motor_drivers[1], encoders[1]},
+     {motor_drivers[2], encoders[2]},
+     {motor_drivers[3], encoders[3]}};
 
 
 /**
