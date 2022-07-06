@@ -29,7 +29,8 @@ class MulticamFocusRig:
                   "Is it plugged in?")
             raise
 
-    def set_speed(self, motor_index : int, speed_percentage : int, wait=True):
+    def set_speed(self, motor_index : int, speed_percentage : int,
+                  wait: bool = True):
         """set the corresponding motor's speed."""
 
         cmd = f"SET_SPEED {motor_index} {speed_percentage}\r\n".encode("ascii")
@@ -39,7 +40,7 @@ class MulticamFocusRig:
                 pass
 
     def time_move(self, motor_index: int, forward: bool, move_time_ms: int,
-                  wait=True):
+                  wait: bool =True):
         """Rotate specified motor forward (or backwards) for desired time [ms].
 
         :param forward: moves the device forward if true; otherwise backwards.
@@ -64,7 +65,8 @@ class MulticamFocusRig:
                 pass
 
     def time_moves(self, motor_indices : list[int],
-                   speed_percentages: list[int], direction_indices : list[bool],
+                   speed_percentages: list[int],
+                   direction_indices : list[bool],
                    wait: bool = True):
 
         # Convert to comma-delimited string of args.

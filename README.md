@@ -26,3 +26,6 @@ Motor lists are separated by commas; argument lists are separated by commas.
 ** TODO: Fritzing-esque Wiring Diagram Here **
 
 The Pi drives six brushed motors through dedicated motor drivers and can read back their positions
+
+## TODO:
+udev rules if using linux
