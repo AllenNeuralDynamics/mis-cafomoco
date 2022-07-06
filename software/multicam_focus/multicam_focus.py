@@ -85,7 +85,6 @@ class MulticamFocusRig:
         cmd = "IS_BUSY\r\n".encode("ascii")
         self._blocking_write(cmd)
         response = self._blocking_read()
-        print(f"Got: {response}")
         assert response in ["True", "False"], \
             "Error: got unknown response while polling busy status. " \
             f"Device response is: '{repr(response)}'"
@@ -95,7 +94,7 @@ class MulticamFocusRig:
 
     def _blocking_write(self, message):
         """Write a string; wait until it has exited the PC."""
-        print(f"Sending: '{repr(message)}'")
+        #print(f"Sending: '{repr(message)}'")
         self.ser.write(message)
         while self.ser.out_waiting:
             pass
@@ -108,11 +107,4 @@ class MulticamFocusRig:
         # processing input.
         # read line. strip \r\n.
         return self.ser.read_until(b'\r\n').decode("utf8").rstrip("\r\n")
-        #recv_buffer = []
-        #while True:
-        #    recv_buffer += self.ser.read(1) # blocks until we get at least one char or timeout.
-        #    if '\n' == recv_buffer[-1]:
-        #        break
-        ## strip off \r\n
-        #return re.split("\r\n", "".join(recv_buffer))[0]
 
