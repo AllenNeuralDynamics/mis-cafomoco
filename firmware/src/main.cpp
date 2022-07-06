@@ -14,21 +14,21 @@ UserIOHandler user_handler;
 EnDirMotorDriver motor_drivers[NUM_BMCS]
     {{0, 1}, // PWM Slice 0
      {2, 3}, // PWM Slice 1
-     {4, 5}, // PWM Slice 2
-     {6, 7}};// PWM Slice 3
+     {4, 5}};//, // PWM Slice 2
+     //{6, 7}};// PWM Slice 3
 
 // Assign encoder instances to their memory location.
 CPUEncoder encoders[NUM_BMCS]
     {{read_buffer_ptr, 0},
      {read_buffer_ptr, 1},
-     {read_buffer_ptr, 2},
-     {read_buffer_ptr, 3}};
+     {read_buffer_ptr, 2}};//,
+     //{read_buffer_ptr, 3}};
 
 MotorController mcs[NUM_BMCS]
     {{motor_drivers[0], encoders[0]},
      {motor_drivers[1], encoders[1]},
-     {motor_drivers[2], encoders[2]},
-     {motor_drivers[3], encoders[3]}};
+     {motor_drivers[2], encoders[2]}};//,
+     //{motor_drivers[3], encoders[3]}};
 
 
 /**
@@ -194,8 +194,8 @@ int main()
                 continue;
             }
             ParsedUserMsg user_msg = user_handler.get_msg();
+            user_handler.clear_msg(); // Clear buffer before handling message.
             handle_user_msg(user_msg);
-            user_handler.clear_msg();
         }
         update_motor_states();
         #ifdef DEBUG

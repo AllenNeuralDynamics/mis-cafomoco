@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define NUM_BMCS (4)
+#define NUM_BMCS (3)
 
 // Encoder are enumerated contiguously starting from this address:
 #define ENCODER_BASE_OFFSET (12)

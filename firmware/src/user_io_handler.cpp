@@ -1,7 +1,7 @@
 #include <user_io_handler.h>
 
 UserIOHandler::UserIOHandler()
-:new_msg_{false},
+:new_msg_{false}, buff_index_{0},
  msg_is_malformed_{false},
  parsed_msg_{ParsedUserMsg{}}
 {
