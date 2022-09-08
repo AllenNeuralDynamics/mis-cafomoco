@@ -1,18 +1,23 @@
 # mis-cafomoco
-## Modular Insertion System - CAmera FOcus MOtor COntroller
 
-A serial interface for focusing 4x cameras on the MIS rig
+A device for controlling the focus on the camera modules of the Modular
+Insertion System.
 
-## Connection Overview
+(mis-cafomoco = Modular Insertion System CAmera FOcus MOtor COntroller)
 
-**BLOCK DIAGRAM HERE**
+This board uses a Raspberry Pi Pico as a USB-to-PWM interface for the 3x
+BD65496MUV motor drivers onboard. The boards are stackable so that a stack of
+two can be used to drive 6 focus motors with one USB connection. This device
+was designed to be used with the
+[12V micro-metal gearmotors from Pololu](https://www.pololu.com/product/4761),
+with the [magnetic encoder add-ons](https://www.pololu.com/product/4761)
+for closed-loop control.
 
-## Low Level Serial Command Overview:
-See the [software](./software) folder for a pip-installable python driver.
-Most commands can refer to several motors at once with unique arguments.
-Motor lists are separated by commas; argument lists are separated by commas.
+## Usage
 
-## Commands
+Below is a list of serial commands supported by the device.
+Most commands can refer to several motors at once with unique arguments. Motor
+lists are separated by commas; argument lists are separated by commas.
 
 | Command                                                              | Example                          | Description                                                                                             |
 |----------------------------------------------------------------------|----------------------------------|---------------------------------------------------------------------------------------------------------|
@@ -21,11 +26,5 @@ Motor lists are separated by commas; argument lists are separated by commas.
 | `TIME_MOVE <motor_0>,<motor_1> <clockwise>,<clockwise> <ms>,<ms>\r\n`| `TIME_MOVE 0,1 1,1 3000,3000\r\n`| Rotate selected cameras (0 and 1) clockwise (if 1, otherwise ccw) for specified time (in milliseconds). |
 |                                                                      |                                  |                                                                                                         |
 
-## Hardware Overview:
+See the [software](./software) folder for a pip-installable python driver.
 
-** TODO: Fritzing-esque Wiring Diagram Here **
-
-The Pi drives six brushed motors through dedicated motor drivers and can read back their positions
-
-## TODO:
-udev rules if using linux
