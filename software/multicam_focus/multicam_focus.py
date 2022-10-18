@@ -3,6 +3,8 @@ import serial
 import re
 from serial.serialutil import SerialException
 
+from typing import List
+
 
 # TODO: consider case where we send commands to the device faster than it can process them.
 
@@ -52,7 +54,7 @@ class MulticamFocusRig:
             while self.is_busy:
                 pass
 
-    def set_speeds(self, motor_indices : list, speed_percentages: list,
+    def set_speeds(self, motor_indices : List, speed_percentages: List,
                    wait: bool = True):
 
         # Convert to comma-delimited string of args.
@@ -64,9 +66,9 @@ class MulticamFocusRig:
             while self.is_busy:
                 pass
 
-    def time_moves(self, motor_indices : list[int],
-                   speed_percentages: list[int],
-                   direction_indices : list[bool],
+    def time_moves(self, motor_indices : List[int],
+                   speed_percentages: List[int],
+                   direction_indices : List[bool],
                    wait: bool = True):
 
         # Convert to comma-delimited string of args.
