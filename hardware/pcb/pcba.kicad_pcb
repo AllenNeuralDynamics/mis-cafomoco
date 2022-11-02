@@ -2290,10 +2290,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 00f581e5-cd74-4331-848f-de2ca93f7f36))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2302,11 +2302,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 9e838fb8-ba8a-4829-aa7e-5c1e4f925533))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2315,10 +2315,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 19f50e7a-18b3-487b-b35e-21be3ffa34e5))
   )
@@ -2364,10 +2364,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 82a136d8-6c7b-4689-bb30-d476f4678c1a))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2376,11 +2376,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 557ef652-1c6c-4387-94e5-a90330c8bf2a))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2389,10 +2389,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 92fd9b7b-2bde-471d-b3ee-91baacc66914))
   )
@@ -2438,10 +2438,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 1d90650c-309a-4292-994f-f7e8b71aa4fe))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2450,11 +2450,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 2a2d3e1f-64e1-4cfe-82ad-895a78fe0e2c))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2463,10 +2463,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp bb5f553b-e0ad-4015-9ea4-8b8f655ca7d1))
   )
@@ -2512,10 +2512,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 48e043ee-81ab-4e61-a81b-90a3d592bda8))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2524,11 +2524,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 5c5eaa92-cce1-4c12-a008-9dfd9b3268d6))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2537,10 +2537,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 3519f70d-de14-4eb0-8f8b-c6152c800a0d))
   )
@@ -2586,10 +2586,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 4d5a8408-8e4c-489e-b002-657730ecf6e2))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2598,11 +2598,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp cfadeddf-442b-4347-ae7a-f19df8b9afb9))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2611,10 +2611,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp b32acaea-cd47-4a73-a0c1-373d519f4021))
   )
@@ -2660,10 +2660,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp d901abd5-91b2-41ed-b520-c8d0d63a98b1))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2672,11 +2672,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp b238098e-37bc-47a4-b804-b46d0c410db0))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2685,10 +2685,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 8289d44a-3294-48d7-9aaf-7acd858828dc))
   )
@@ -2734,10 +2734,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 5b65a3c0-d262-4fa1-80ca-93a1a6a2dda9))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2746,11 +2746,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 3eb81a3e-61d8-42e1-86d6-e780e0f1dd15))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2759,10 +2759,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 35820678-eaf1-4e5a-9ee8-89578aaed184))
   )
@@ -2808,10 +2808,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp f3ae8f97-c968-4274-a953-333d18cbf40c))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2820,11 +2820,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp c06e5e7c-c9d3-4ec8-9cbe-adebe02c2230))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2833,10 +2833,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 15f9ce5c-444b-4b49-9e20-44109e09dae0))
   )
@@ -2882,10 +2882,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 85a5dd7d-6ab2-4945-9279-d12a56a09c3d))
     (pad "2" smd custom (at 0 0 90) (size 0.3 0.3) (layers "B.Cu")
@@ -2894,11 +2894,11 @@
       (primitives
         (gr_poly (pts
             (xy 0.7 0)
-            (xy 1.2 -0.75)
-            (xy -1.2 -0.75)
-            (xy -0.7 0)
-            (xy -1.2 0.75)
             (xy 1.2 0.75)
+            (xy -1.2 0.75)
+            (xy -0.7 0)
+            (xy -1.2 -0.75)
+            (xy 1.2 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp 23c5fcb5-a572-46db-aab8-bbc19461dd13))
     (pad "3" smd custom (at 2 0 270) (size 0.3 0.3) (layers "B.Cu" "B.Mask")
@@ -2907,10 +2907,10 @@
       (primitives
         (gr_poly (pts
             (xy 1 0)
-            (xy 0.5 -0.75)
-            (xy -0.5 -0.75)
-            (xy -0.5 0.75)
             (xy 0.5 0.75)
+            (xy -0.5 0.75)
+            (xy -0.5 -0.75)
+            (xy 0.5 -0.75)
           ) (width 0) (fill yes))
       ) (tstamp f4d8d87a-e5b3-44b8-8667-25d66377dcdf))
   )
@@ -3899,7 +3899,7 @@
   (gr_text "2.1 x 5.5mm" (at 168.5 41.337204 180) (layer "F.SilkS") (tstamp aab03633-d2dc-4875-80ea-a5ca3005f3ae)
     (effects (font (size 1 1) (thickness 0.15)))
   )
-  (gr_text "MIS-Cafomoco: rev 1.1\ngithub.com/AllenNeuralDynamics/mis-cafomoco" (at 106.4 97.8) (layer "F.SilkS") (tstamp ca474a0f-7a60-4c1c-850e-20992b5951a2)
+  (gr_text "mis-focus-controller: rev 1.1\ngithub.com/AllenNeuralDynamics/mis-focus-controller" (at 106.4 97.8) (layer "F.SilkS") (tstamp ca474a0f-7a60-4c1c-850e-20992b5951a2)
     (effects (font (size 1 1) (thickness 0.15)) (justify left))
   )
   (gr_text "This board stacks while sharing a Pi Pico.\n  JP1, JP2, JP3, JP4,\n  JP11, JP12, JP13, JP14, and\n  JP21, JP22, JP23, JP24\nmust be configured to determine upper or lower board configuration." (at 135.5 66.5) (layer "F.SilkS") (tstamp d4ab4d52-91a2-4bd6-b99c-6a29304c4a20)
