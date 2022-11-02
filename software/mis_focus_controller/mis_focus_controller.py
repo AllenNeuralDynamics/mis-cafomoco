@@ -9,8 +9,8 @@ from typing import List
 # TODO: consider case where we send commands to the device faster than it can process them.
 
 
-class MulticamFocusRig:
-    """Class for interacting with the focus rings of the MIS instrument."""
+class FocusController:
+    """Class for interacting with the mis-focus-controller device."""
 
     DEFAULT_PORT_NAME = "/dev/ttyACM0"
     MOTOR_COUNT = 6
@@ -27,7 +27,7 @@ class MulticamFocusRig:
             #for motor_index in range(self.__class__.MOTOR_COUNT):
             #    self.set_speed(motor_index, self.__class__.DEFAULT_PORT_NAME)
         except (FileNotFoundError, SerialException):
-            print("Error: Failed to connect to the Multicam Focus Rings. "
+            print("Error: Failed to connect to the mis-focus-controller device. "
                   "Is it plugged in?")
             raise
 
