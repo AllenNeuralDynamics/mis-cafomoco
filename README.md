@@ -1,9 +1,9 @@
-# mis-cafomoco
+# mis-focus-controller
 
 A device for controlling the focus on the camera modules of the Modular
 Insertion System.
 
-(mis-cafomoco = Modular Insertion System CAmera FOcus MOtor COntroller)
+(previously named mis-cafomoco)
 
 This board uses a Raspberry Pi Pico as a USB-to-PWM interface for the 3x
 BD65496MUV motor drivers onboard. The boards are stackable so that a stack of
