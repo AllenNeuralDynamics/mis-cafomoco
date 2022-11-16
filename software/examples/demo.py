@@ -2,15 +2,15 @@
 """Motor Api Demo."""
 
 from time import sleep
-from multicam_focus import MulticamFocusRig
+from mis_focus_controller import FocusController
 
 
 if __name__ == "__main__":
 
     MOTOR_INDEX = 2
 
-    print("Connecting to Multicam Focus Rig... ", end=" ", flush=True)
-    focus_rig = MulticamFocusRig("/dev/ttyACM0")
+    print("Connecting to mis-focus-controller... ", end=" ", flush=True)
+    focus_rig = FocusController("/dev/ttyACM0")
     print("done.")
 
     on_time = 3.0

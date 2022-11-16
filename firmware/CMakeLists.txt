@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 include(pico-sdk/pico_sdk_init.cmake)
 
-project(multicam_focus)
+project(mis_focus_controller)
 
 # Enable try/catch exceptions. (Required for string parsing implementation.)
 set(PICO_CXX_ENABLE_EXCEPTIONS 1)
