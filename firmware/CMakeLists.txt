@@ -44,8 +44,12 @@ add_library(core1_main
 include_directories(inc)
 
 
-# For Debugging. Check how many CPU cycles an encoder reading iteration takes.
+# For Debugging.
+# Check how many CPU cycles an encoder reading iteration takes.
 #add_definitions(-DPROFILE_ENCODER_LOOP)
+# Print encoder ticks values.
+#add_definitions(-DENCODER_DEBUG)
+# Print state change information.
 #add_definitions(-DDEBUG)
 
 

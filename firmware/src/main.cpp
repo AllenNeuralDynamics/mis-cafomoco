@@ -10,25 +10,32 @@
 // Create Object Instances.
 UserIOHandler user_handler;
 
-// Motor Controller Objects need to be on their own slices.
+// Motor Controller Object GPIO setup.
+// Each instance must be on its own pwm slice. See datasheet sec 1.4.3.
 EnDirMotorDriver motor_drivers[NUM_BMCS]
     {{0, 1}, // PWM Slice 0
      {2, 3}, // PWM Slice 1
-     {4, 5}};//, // PWM Slice 2
-     //{6, 7}};// PWM Slice 3
+     {4, 5}, // PWM Slice 2
+     {6, 7}, // PWM Slice 3
+     {8, 9}, // PWM Slice 4
+     {10, 11}};// PWM Slice 5
 
 // Assign encoder instances to their memory location.
 CPUEncoder encoders[NUM_BMCS]
     {{read_buffer_ptr, 0},
      {read_buffer_ptr, 1},
-     {read_buffer_ptr, 2}};//,
-     //{read_buffer_ptr, 3}};
+     {read_buffer_ptr, 2},
+     {read_buffer_ptr, 3},
+     {read_buffer_ptr, 4},
+     {read_buffer_ptr, 5}};
 
 MotorController mcs[NUM_BMCS]
     {{motor_drivers[0], encoders[0]},
      {motor_drivers[1], encoders[1]},
-     {motor_drivers[2], encoders[2]}};//,
-     //{motor_drivers[3], encoders[3]}};
+     {motor_drivers[2], encoders[2]},
+     {motor_drivers[3], encoders[3]},
+     {motor_drivers[4], encoders[4]},
+     {motor_drivers[5], encoders[5]}};
 
 
 /**
@@ -198,11 +205,15 @@ int main()
             handle_user_msg(user_msg);
         }
         update_motor_states();
-        #ifdef DEBUG
-        printf("time: %07d | Enc0 ticks: %07d | Enc1 ticks: %07d\r",
+        #ifdef ENCODER_DEBUG
+        printf("time: %07d | Enc0: %07d | Enc1: %07d | Enc2: %07d | Enc3: %07d | Enc4: %07d | Enc5: %07d\r",
                 to_ms_since_boot(get_absolute_time()),
                 encoders[0].get_ticks(),
-                encoders[1].get_ticks());
+                encoders[1].get_ticks(),
+                encoders[2].get_ticks(),
+                encoders[3].get_ticks(),
+                encoders[4].get_ticks(),
+                encoders[5].get_ticks());
         #endif
     }
 
