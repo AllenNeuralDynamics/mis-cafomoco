@@ -73,8 +73,7 @@ void MotorController::update()
         case IDLE:
         {
             // Check inputs.
-            if (set_move_time_ms_ > 0 &&
-                set_speed_ > 0) // Only move if a speed was set.
+            if (set_move_time_ms_ > 0 && set_speed_ > 0) // Only move if a speed was set.
             {
                 next_state = TIME_MOVE;
             }

@@ -58,7 +58,8 @@ public:
      * \brief disable the pwm output
      * \note inline.
      */
-    void set_dir(bool dir) {gpio_put(dir_pin_, dir);}
+    void set_dir(bool dir)
+    {gpio_put(dir_pin_, dir);}
 
 private:
     uint torque_pwm_pin_;
