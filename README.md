@@ -26,5 +26,6 @@ lists are separated by commas; argument lists are separated by commas.
 | `TIME_MOVE <motor_0>,<motor_1> <clockwise>,<clockwise> <ms>,<ms>\r\n`| `TIME_MOVE 0,1 1,1 3000,3000\r\n`| Rotate selected cameras (0 and 1) clockwise (if 1, otherwise ccw) for specified time (in milliseconds). |
 |                                                                      |                                  |                                                                                                         |
 
-See the [software](./software) folder for a pip-installable python driver.
+See the [mis-focus-controller-sw](https://github.com/AllenNeuralDynamics/mis-focus-controller-sw)
+for a pip-installable python driver.
 
